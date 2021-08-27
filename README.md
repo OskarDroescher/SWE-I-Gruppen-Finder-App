@@ -24,5 +24,5 @@ Features:
 •	Schwierigkeitsgrad der Aktivität (leicht, mittel, schwer)
 
 Sprachen:
-•	Angular
-•	HTML, CSS, Sass, JS (TS), C#
+•	ASP.NET
+•	HTML, CSS, Sass, JS (TS)
