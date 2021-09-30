@@ -2,23 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SportsAndMeets.Models;
+using Speet.Models;
 
-namespace SportsAndMeets.Migrations
+namespace Speet.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210908121223_SportGroupMigration")]
-    partial class SportGroupMigration
+    partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.9");
 
-            modelBuilder.Entity("SportsAndMeets.Models.SportGroup", b =>
+            modelBuilder.Entity("Speet.Models.SportGroup", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

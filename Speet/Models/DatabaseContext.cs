@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace SportsAndMeets.Models
+namespace Speet.Models
 {
     public class DatabaseContext : DbContext
     {
@@ -12,7 +12,7 @@ namespace SportsAndMeets.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = "./Database/SportsAndMeetsDB.db" };
+            var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = "./Database/SpeetDB.db" };
             var connectionString = connectionStringBuilder.ToString();
             var connection = new SqliteConnection(connectionString);
 

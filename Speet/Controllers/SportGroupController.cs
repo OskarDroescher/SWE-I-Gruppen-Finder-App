@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SportsAndMeets.Models;
+using Speet.Models;
 
-namespace SportsAndMeets.Controllers
+namespace Speet.Controllers
 {
     public class SportGroupController : Controller
     {
@@ -13,6 +13,11 @@ namespace SportsAndMeets.Controllers
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult DiscoverGroups()
         {
             return View();
         }
