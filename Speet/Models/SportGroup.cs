@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SportsAndMeets.Models
+namespace Speet.Models
 {
     public class SportGroup
     {
