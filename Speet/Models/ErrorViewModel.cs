@@ -1,6 +1,6 @@
 using System;
 
-namespace SportsAndMeets.Models
+namespace Speet.Models
 {
     public class ErrorViewModel
     {

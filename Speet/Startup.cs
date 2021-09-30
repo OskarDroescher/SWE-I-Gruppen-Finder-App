@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SportsAndMeets.Models;
+using Speet.Models;
 
-namespace SportsAndMeets
+namespace Speet
 {
     public class Startup
     {
