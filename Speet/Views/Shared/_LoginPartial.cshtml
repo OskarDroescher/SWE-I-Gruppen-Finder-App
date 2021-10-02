@@ -1,0 +1,22 @@
+﻿
+
+
+<ul class="navbar-nav d-sm-inline-flex flex-sm-row-reverse">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline">
+                <a class="nav-link text-dark" asp-controller="SportGroup" asp-action="Logout">Logout</a>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="SportGroup" asp-action="Login">Login</a>
+        </li>
+    }
+</ul>
