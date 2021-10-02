@@ -25,6 +25,7 @@ namespace Speet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -40,7 +41,6 @@ namespace Speet
                 options.ClientId = googleAuthNSection["ClientId"];
                 options.ClientSecret = googleAuthNSection["ClientSecret"];
             });
-
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddDbContext<DatabaseContext>();
         }
