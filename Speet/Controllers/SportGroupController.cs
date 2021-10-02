@@ -17,12 +17,17 @@ namespace Speet.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult DiscoverGroups()
         {
             return View();
         }
 
-        public IActionResult DiscoverGroups()
+        public IActionResult MyGroups()
+        {
+            return View();
+        }
+
+        public IActionResult CreateGroup()
         {
             return View();
         }

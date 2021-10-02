@@ -70,7 +70,7 @@ namespace Speet
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=SportGroup}/{action=Index}/{id?}");
+                    pattern: "{controller=SportGroup}/{action=DiscoverGroups}/{id?}");
             });
         }
     }
