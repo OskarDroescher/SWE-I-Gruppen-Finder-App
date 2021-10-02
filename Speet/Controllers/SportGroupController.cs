@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Speet.Models;
+using System.Threading.Tasks;
 
 namespace Speet.Controllers
 {
+
     public class SportGroupController : Controller
     {
         private readonly DatabaseContext _db;
@@ -18,6 +23,11 @@ namespace Speet.Controllers
         }
 
         public IActionResult DiscoverGroups()
+        {
+            return View();
+        }
+
+        public IActionResult Privacy()
         {
             return View();
         }
