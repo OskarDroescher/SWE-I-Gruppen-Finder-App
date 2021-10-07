@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Speet.Models
@@ -12,12 +13,21 @@ namespace Speet.Models
         public string GroupName { get; set; }
 
         [Required]
-        public byte NumberOfParticipants { get; set; }
+        public string Location { get; set; }
 
         [Required]
         public DateTime MeetupDate { get; set; }
 
-        [Required]
-        public string Location { get; set; }
+        public virtual User CreatedBy { get; set; }
+
+        public virtual ICollection<User> Participants { get; set; }
+
+        public virtual ICollection<Tag> Tags { get; set; }
+
+        public SportGroup()
+        {
+            Participants = new HashSet<User>();
+            Tags = new HashSet<Tag>();
+        }
     }
 }
