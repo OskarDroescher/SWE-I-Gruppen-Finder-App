@@ -8,6 +8,8 @@ namespace Speet.Models
         [Key]
         public long GoogleId { get; set; }
 
+        public GenderType Gender { get; set; }
+
         public virtual ICollection<SportGroup> CreatedGroups { get; set; }
 
         public virtual ICollection<SportGroup> JoinedGroups { get; set; }
@@ -17,5 +19,12 @@ namespace Speet.Models
             CreatedGroups = new HashSet<SportGroup>();
             JoinedGroups = new HashSet<SportGroup>();
         }
+    }
+
+    public enum GenderType
+    {
+        Male,
+        Female,
+        Other
     }
 }

@@ -24,17 +24,38 @@ namespace Speet.Models
         {
             base.OnModelCreating(modelBuilder);
 
+            //Configure GenderType enum to string conversation in database
+            modelBuilder.Entity<User>()
+                        .Property(u => u.Gender)
+                        .HasConversion<string>();
+
+            //Configure ActivityCategoryType enum to string conversation in database
+            modelBuilder.Entity<ActivityTag>()
+                        .Property(at => at.ActivityCategory)
+                        .HasConversion<string>();
+
+            //Configure GenderRestrictionType enum to string conversation in database
+            modelBuilder.Entity<GenderTag>()
+                        .Property(gt => gt.GenderRestriction)
+                        .HasConversion<string>();
+
             //Configure n to m SportGroup-User relation and join table name
             modelBuilder.Entity<SportGroup>()
                         .HasMany<User>(sg => sg.Participants)
                         .WithMany(u => u.JoinedGroups)
                         .UsingEntity(j => j.ToTable("Joins"));
 
-            //Configure n to m SportGroup-User relation and join table name
+            //Configure n to m SportGroup-ActivityTag relation and join table name
             modelBuilder.Entity<SportGroup>()
-                        .HasMany<Tag>(sg => sg.Tags)
-                        .WithMany(t => t.AssignedGroups)
-                        .UsingEntity(j => j.ToTable("Assigned"));
+                        .HasMany<ActivityTag>(sg => sg.ActivityTags)
+                        .WithMany(at => at.AssignedGroups)
+                        .UsingEntity(j => j.ToTable("Assigned_AT"));
+
+            //Configure n to m SportGroup-GenderTag relation and join table name
+            modelBuilder.Entity<SportGroup>()
+                        .HasMany<GenderTag>(sg => sg.GenderTags)
+                        .WithMany(gt => gt.AssignedGroups)
+                        .UsingEntity(j => j.ToTable("Assigned_GT"));
 
             //Configure n to 1 SportGroup-User relation
             modelBuilder.Entity<SportGroup>()
@@ -45,6 +66,7 @@ namespace Speet.Models
 
         public DbSet<SportGroup> SportGroup { get; set; }
         public DbSet<User> User { get; set; }
-        public DbSet<Tag> Tag { get; set; }
+        public DbSet<ActivityTag> ActivityTag { get; set; }
+        public DbSet<GenderTag> GenderTag { get; set; }
     }
 }
