@@ -3,5 +3,17 @@
     ViewData["Title"] = "Gruppe suchen";
 }
 
-<h1>DiscoverGroups</h1>
+    <link rel="stylesheet" href="~/css/discovergroups.css" />
+
+<div class="mapfiltercontainer">
+    <div id="filtercontainer">
+        @{await Html.RenderPartialAsync("_SportGroupsFilterPartial", "/SportGroup/TestMethod");}
+    </div>
+    <div id="mapcontainer">
+        @*insert map here*@
+    </div>
+</div>
+
+
+    
 

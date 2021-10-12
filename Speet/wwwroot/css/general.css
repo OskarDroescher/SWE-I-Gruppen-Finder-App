@@ -14,3 +14,31 @@
     width: 100%;
     height: 100%;
 }
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.hcenter {
+    margin: 0 auto;
+}
+
+.vcenter {
+    margin: auto 0;
+}
+
+.center {
+    margin: auto auto;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.inline {
+    display: inline;
+}

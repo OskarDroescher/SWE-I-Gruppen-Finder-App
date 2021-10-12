@@ -1,0 +1,110 @@
+﻿#filterwrappergrid {
+    display: grid;
+    grid-template-columns: 200px 500px;
+    grid-row-gap: 20px;
+    padding: 5px 5px;
+}
+
+    #filterwrappergrid p {
+        margin: 0;
+    }
+
+.activitygrid {
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+    grid-template-rows: auto auto;
+    grid-row-gap: 10px;
+}
+
+    .activitygrid input {
+        display: block;
+        margin: auto auto;
+    }
+
+    .activitygrid img {
+        display: block;
+        margin: auto auto;
+        width: 30px;
+        height: 30px;
+    }
+
+.gendergrid {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+}
+
+    .gendergrid input {
+        display: block;
+        margin: auto auto;
+    }
+
+    .gendergrid img {
+        display: block;
+        margin: auto auto;
+        width: 30px;
+        height: 30px;
+    }
+
+.dategrid {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.slider {
+    -webkit-appearance: none;
+    outline: none;
+    width: 100%;
+    height: 10px;
+    background: #d3d3d3;
+    border-radius: 20px;
+}
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        background: #ffB01f;
+        border-radius: 100%;
+    }
+
+    .slider::-ms-thumb {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        background: #ffB01f;
+        border-radius: 100%;
+    }
+
+.valuelabel {
+    border: none;
+    background: #1265b5;
+    text-align: right;
+    width: 30px;
+    color: #ffffff;
+}
+
+.filterheading {
+    font-size: 20px;
+}
+
+#submitbutton {
+    width: 250px;
+    margin-top: 10px;
+    grid-column: 2;
+    background: #ffB01f;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+#resetbutton {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#resetbuttonicon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}

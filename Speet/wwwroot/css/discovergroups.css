@@ -1,0 +1,14 @@
+﻿.mapfiltercontainer {
+    display: grid;
+    height: 500px;
+    grid-template-columns: 720px auto;
+}
+
+#filtercontainer {
+    border-bottom: 1px solid Black;
+    border-right: 1px solid Black;
+}
+
+#mapcontainer {
+    border-bottom: 1px solid Black;
+}
