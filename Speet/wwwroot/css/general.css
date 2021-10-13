@@ -35,10 +35,18 @@
     margin: auto auto;
 }
 
-.inline-block {
-    display: inline-block;
+.centerText {
+    text-align: center;
 }
 
-.inline {
-    display: inline;
+.primarybutton {
+    background: #ffB01f;
+    cursor: pointer;
+    font-weight: bold;
+    border: solid 3px Black;
+    border-radius: 10px;
 }
+
+    .primarybutton:hover {
+        background: #ffc762;
+    }

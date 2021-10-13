@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Speet.Models
 {
-    public class GenderTag
+    public class GenderRestrictionTag
     {
         [Key]
         public GenderRestrictionType GenderRestriction { get; set; }
@@ -12,7 +12,7 @@ namespace Speet.Models
 
         public virtual ICollection<SportGroup> AssignedGroups { get; set; }
 
-        public GenderTag()
+        public GenderRestrictionTag()
         {
             AssignedGroups = new HashSet<SportGroup>();
         }

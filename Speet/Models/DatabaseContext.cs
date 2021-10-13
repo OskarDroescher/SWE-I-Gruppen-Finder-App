@@ -35,8 +35,8 @@ namespace Speet.Models
                         .HasConversion<string>();
 
             //Configure GenderRestrictionType enum to string conversation in database
-            modelBuilder.Entity<GenderTag>()
-                        .Property(gt => gt.GenderRestriction)
+            modelBuilder.Entity<GenderRestrictionTag>()
+                        .Property(grt => grt.GenderRestriction)
                         .HasConversion<string>();
 
             //Configure n to m SportGroup-User relation and join table name
@@ -49,13 +49,12 @@ namespace Speet.Models
             modelBuilder.Entity<SportGroup>()
                         .HasMany<ActivityTag>(sg => sg.ActivityTags)
                         .WithMany(at => at.AssignedGroups)
-                        .UsingEntity(j => j.ToTable("Assigned_AT"));
+                        .UsingEntity(j => j.ToTable("Assigned"));
 
-            //Configure n to m SportGroup-GenderTag relation and join table name
+            //Configure n to 1 SportGroup-GenderRestrictionTag relation and join table name
             modelBuilder.Entity<SportGroup>()
-                        .HasMany<GenderTag>(sg => sg.GenderTags)
-                        .WithMany(gt => gt.AssignedGroups)
-                        .UsingEntity(j => j.ToTable("Assigned_GT"));
+                        .HasOne<GenderRestrictionTag>(sg => sg.GenderRestrictionTag)
+                        .WithMany(grt => grt.AssignedGroups);
 
             //Configure n to 1 SportGroup-User relation
             modelBuilder.Entity<SportGroup>()
@@ -67,6 +66,6 @@ namespace Speet.Models
         public DbSet<SportGroup> SportGroup { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<ActivityTag> ActivityTag { get; set; }
-        public DbSet<GenderTag> GenderTag { get; set; }
+        public DbSet<GenderRestrictionTag> GenderRestrictionTag { get; set; }
     }
 }

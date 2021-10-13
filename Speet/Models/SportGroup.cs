@@ -24,13 +24,12 @@ namespace Speet.Models
 
         public virtual ICollection<ActivityTag> ActivityTags { get; set; }
 
-        public virtual ICollection<GenderTag> GenderTags { get; set; }
+        public virtual GenderRestrictionTag GenderRestrictionTag { get; set; }
 
         public SportGroup()
         {
             Participants = new HashSet<User>();
             ActivityTags = new HashSet<ActivityTag>();
-            GenderTags = new HashSet<GenderTag>();
         }
     }
 }

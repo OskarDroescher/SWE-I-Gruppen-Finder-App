@@ -28,22 +28,7 @@ namespace Speet.Migrations
 
                     b.HasIndex("AssignedGroupsId");
 
-                    b.ToTable("Assigned_AT");
-                });
-
-            modelBuilder.Entity("GenderTagSportGroup", b =>
-                {
-                    b.Property<long>("AssignedGroupsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("GenderTagsGenderRestriction")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("AssignedGroupsId", "GenderTagsGenderRestriction");
-
-                    b.HasIndex("GenderTagsGenderRestriction");
-
-                    b.ToTable("Assigned_GT");
+                    b.ToTable("Assigned");
                 });
 
             modelBuilder.Entity("Speet.Models.ActivityTag", b =>
@@ -59,7 +44,7 @@ namespace Speet.Migrations
                     b.ToTable("ActivityTag");
                 });
 
-            modelBuilder.Entity("Speet.Models.GenderTag", b =>
+            modelBuilder.Entity("Speet.Models.GenderRestrictionTag", b =>
                 {
                     b.Property<string>("GenderRestriction")
                         .HasColumnType("TEXT");
@@ -69,7 +54,7 @@ namespace Speet.Migrations
 
                     b.HasKey("GenderRestriction");
 
-                    b.ToTable("GenderTag");
+                    b.ToTable("GenderRestrictionTag");
                 });
 
             modelBuilder.Entity("Speet.Models.SportGroup", b =>
@@ -80,6 +65,9 @@ namespace Speet.Migrations
 
                     b.Property<long>("CreatedByGoogleId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("GenderRestrictionTagGenderRestriction")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GroupName")
                         .IsRequired()
@@ -95,6 +83,8 @@ namespace Speet.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedByGoogleId");
+
+                    b.HasIndex("GenderRestrictionTagGenderRestriction");
 
                     b.ToTable("SportGroup");
                 });
@@ -144,21 +134,6 @@ namespace Speet.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GenderTagSportGroup", b =>
-                {
-                    b.HasOne("Speet.Models.SportGroup", null)
-                        .WithMany()
-                        .HasForeignKey("AssignedGroupsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Speet.Models.GenderTag", null)
-                        .WithMany()
-                        .HasForeignKey("GenderTagsGenderRestriction")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Speet.Models.SportGroup", b =>
                 {
                     b.HasOne("Speet.Models.User", "CreatedBy")
@@ -167,7 +142,13 @@ namespace Speet.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Speet.Models.GenderRestrictionTag", "GenderRestrictionTag")
+                        .WithMany("AssignedGroups")
+                        .HasForeignKey("GenderRestrictionTagGenderRestriction");
+
                     b.Navigation("CreatedBy");
+
+                    b.Navigation("GenderRestrictionTag");
                 });
 
             modelBuilder.Entity("SportGroupUser", b =>
@@ -183,6 +164,11 @@ namespace Speet.Migrations
                         .HasForeignKey("ParticipantsGoogleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Speet.Models.GenderRestrictionTag", b =>
+                {
+                    b.Navigation("AssignedGroups");
                 });
 
             modelBuilder.Entity("Speet.Models.User", b =>

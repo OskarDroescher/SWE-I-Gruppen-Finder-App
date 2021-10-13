@@ -44,33 +44,38 @@ participantslabel.onblur = function () {
     }
 }
 
-
 //Reset filter
 var resetbutton = document.getElementById('resetbutton');
 var reseticon = document.getElementById('resetbuttonicon');
-resetbutton.addEventListener('click', resetFilter);
-reseticon.addEventListener('click', resetFilter);
+resetbutton.addEventListener('click', resetFilterAndSubmit);
+reseticon.addEventListener('click', resetFilterAndSubmit);
 
-var filterwrappergrid = document.getElementById('filterwrappergrid');
-var activitycheckboxes = filterwrappergrid.getElementsByClassName('activitygrid')[0].querySelectorAll('input[type=checkbox]');
-var gendercheckboxes = filterwrappergrid.getElementsByClassName('gendergrid')[0].querySelectorAll('input[type=checkbox]');
+var activitycheckboxes = document.getElementsByClassName('activitygrid')[0].querySelectorAll('input[type=checkbox]');
+var gendercheckboxes = document.getElementsByClassName('gendergrid')[0].querySelectorAll('input[type=checkbox]');
 var mindatecalender = document.getElementById('mindate');
 var maxdatecalender = document.getElementById('maxdate');
+var submitbutton = document.getElementById('submitbutton');
 
-function resetFilter() {
-    activitycheckboxes.forEach(checkbox => checkbox.checked = true);
-    gendercheckboxes.forEach(checkbox => checkbox.checked = true);
+function resetFilterAndSubmit() {
+    activitycheckboxes.forEach(checkbox => checkbox.checked = false);
+    gendercheckboxes.forEach(checkbox => checkbox.checked = false);
     maxdistanceslider.value = maxdistanceslider.max;
     participantsslider.value = participantsslider.max;
     maxdistancelabel.value = maxdistanceslider.value;
     participantslabel.value = participantsslider.value;
-    mindatecalender.value = mindatecalender.min;
+    mindatecalender.value = '';
     maxdatecalender.value = '';
+    submitbutton.click();
 }
 
 //Set up filter
 window.onload = function () {
     mindatecalender.min = new Date().toLocaleDateString('en-ca')
     maxdatecalender.min = new Date().toLocaleDateString('en-ca')
-    resetFilter();
+
+    if (mindatecalender.value == '0001-01-01')
+        mindatecalender.value = '';
+
+    if (maxdatecalender.value == '0001-01-01')
+        maxdatecalender.value = '';
 }

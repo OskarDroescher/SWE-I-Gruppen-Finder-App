@@ -20,7 +20,7 @@ namespace Speet.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GenderTag",
+                name: "GenderRestrictionTag",
                 columns: table => new
                 {
                     GenderRestriction = table.Column<string>(type: "TEXT", nullable: false),
@@ -28,7 +28,7 @@ namespace Speet.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GenderTag", x => x.GenderRestriction);
+                    table.PrimaryKey("PK_GenderRestrictionTag", x => x.GenderRestriction);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,11 +53,18 @@ namespace Speet.Migrations
                     GroupName = table.Column<string>(type: "TEXT", nullable: false),
                     Location = table.Column<string>(type: "TEXT", nullable: false),
                     MeetupDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedByGoogleId = table.Column<long>(type: "INTEGER", nullable: false)
+                    CreatedByGoogleId = table.Column<long>(type: "INTEGER", nullable: false),
+                    GenderRestrictionTagGenderRestriction = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SportGroup", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SportGroup_GenderRestrictionTag_GenderRestrictionTagGenderRestriction",
+                        column: x => x.GenderRestrictionTagGenderRestriction,
+                        principalTable: "GenderRestrictionTag",
+                        principalColumn: "GenderRestriction",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_SportGroup_User_CreatedByGoogleId",
                         column: x => x.CreatedByGoogleId,
@@ -67,7 +74,7 @@ namespace Speet.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Assigned_AT",
+                name: "Assigned",
                 columns: table => new
                 {
                     ActivityTagsActivityCategory = table.Column<string>(type: "TEXT", nullable: false),
@@ -75,39 +82,15 @@ namespace Speet.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Assigned_AT", x => new { x.ActivityTagsActivityCategory, x.AssignedGroupsId });
+                    table.PrimaryKey("PK_Assigned", x => new { x.ActivityTagsActivityCategory, x.AssignedGroupsId });
                     table.ForeignKey(
-                        name: "FK_Assigned_AT_ActivityTag_ActivityTagsActivityCategory",
+                        name: "FK_Assigned_ActivityTag_ActivityTagsActivityCategory",
                         column: x => x.ActivityTagsActivityCategory,
                         principalTable: "ActivityTag",
                         principalColumn: "ActivityCategory",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Assigned_AT_SportGroup_AssignedGroupsId",
-                        column: x => x.AssignedGroupsId,
-                        principalTable: "SportGroup",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Assigned_GT",
-                columns: table => new
-                {
-                    AssignedGroupsId = table.Column<long>(type: "INTEGER", nullable: false),
-                    GenderTagsGenderRestriction = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Assigned_GT", x => new { x.AssignedGroupsId, x.GenderTagsGenderRestriction });
-                    table.ForeignKey(
-                        name: "FK_Assigned_GT_GenderTag_GenderTagsGenderRestriction",
-                        column: x => x.GenderTagsGenderRestriction,
-                        principalTable: "GenderTag",
-                        principalColumn: "GenderRestriction",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Assigned_GT_SportGroup_AssignedGroupsId",
+                        name: "FK_Assigned_SportGroup_AssignedGroupsId",
                         column: x => x.AssignedGroupsId,
                         principalTable: "SportGroup",
                         principalColumn: "Id",
@@ -139,14 +122,9 @@ namespace Speet.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Assigned_AT_AssignedGroupsId",
-                table: "Assigned_AT",
+                name: "IX_Assigned_AssignedGroupsId",
+                table: "Assigned",
                 column: "AssignedGroupsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Assigned_GT_GenderTagsGenderRestriction",
-                table: "Assigned_GT",
-                column: "GenderTagsGenderRestriction");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Joins_ParticipantsGoogleId",
@@ -157,15 +135,17 @@ namespace Speet.Migrations
                 name: "IX_SportGroup_CreatedByGoogleId",
                 table: "SportGroup",
                 column: "CreatedByGoogleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SportGroup_GenderRestrictionTagGenderRestriction",
+                table: "SportGroup",
+                column: "GenderRestrictionTagGenderRestriction");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Assigned_AT");
-
-            migrationBuilder.DropTable(
-                name: "Assigned_GT");
+                name: "Assigned");
 
             migrationBuilder.DropTable(
                 name: "Joins");
@@ -174,10 +154,10 @@ namespace Speet.Migrations
                 name: "ActivityTag");
 
             migrationBuilder.DropTable(
-                name: "GenderTag");
+                name: "SportGroup");
 
             migrationBuilder.DropTable(
-                name: "SportGroup");
+                name: "GenderRestrictionTag");
 
             migrationBuilder.DropTable(
                 name: "User");
