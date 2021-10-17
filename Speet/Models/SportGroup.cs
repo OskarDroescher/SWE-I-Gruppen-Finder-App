@@ -18,6 +18,9 @@ namespace Speet.Models
         [Required]
         public DateTime MeetupDate { get; set; }
 
+        [Required]
+        public int MaxParticipants { get; set; }
+
         public virtual User CreatedBy { get; set; }
 
         public virtual ICollection<User> Participants { get; set; }

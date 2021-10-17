@@ -13,6 +13,7 @@ insert into ActivityTag values ('Other', '/icons/placeholder.png');
 
 delete from GenderRestrictionTag;
 
+insert into GenderRestrictionTag values ('None', '/icons/placeholder.png');
 insert into GenderRestrictionTag values ('MaleOnly', '/icons/placeholder.png');
 insert into GenderRestrictionTag values ('FemaleOnly', '/icons/placeholder.png');
 insert into GenderRestrictionTag values ('OtherOnly', '/icons/placeholder.png');

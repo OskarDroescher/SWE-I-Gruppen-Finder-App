@@ -1,0 +1,94 @@
+﻿@model CreateEditGroupContainer
+
+@{
+    string action;
+    string groupName;
+    List<ActivityCategoryType> checkedActivities;
+    GenderRestrictionType checkedGenderRestriction;
+    int maxParticipants;
+    string meetupDateTime;
+    string submitButtonText;
+
+    if (Model.SportGroupToEdit == null)
+    {
+        ViewData["Title"] = "Gruppe erstellen";
+        action = "AddGroup";
+        groupName = string.Empty;
+        checkedActivities = Enumerable.Empty<ActivityCategoryType>().ToList();
+        checkedGenderRestriction = GenderRestrictionType.None;
+        maxParticipants = 20;
+        meetupDateTime = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
+        submitButtonText = "Gruppe erstellen";
+    }
+    else
+    {
+        ViewData["Title"] = "Gruppe bearbeiten";
+        action = "UpdateGroup";
+        groupName = Model.SportGroupToEdit.GroupName;
+        checkedActivities = Model.SportGroupToEdit.ActivityTags.Select(t => t.ActivityCategory).ToList();
+        checkedGenderRestriction = Model.SportGroupToEdit.GenderRestrictionTag.GenderRestriction;
+        maxParticipants = Model.SportGroupToEdit.MaxParticipants;
+        meetupDateTime = DateTime.Today.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
+        submitButtonText = "Gruppe bearbeiten";
+    }
+}
+
+<link rel="stylesheet" href="~/css/createeditgroup.css" />
+
+<div class="viewcontainer">
+    <form class="propertiesformgrid" asp-controller="SportGroup" asp-action="@action" method="get">
+        <h3 class="propertiesheading">Eigenschaften</h3>
+
+        <b>Gruppenname</b>
+        <input type="text" class="textfield" name="GroupName" value="@groupName" maxlength="75"/>
+
+        <div>
+            <b>Aktivitäten</b>
+        </div>
+        <div class="activitygrid">
+            @foreach (var activityTag in Model.AllActivityTags)
+            {
+                <div>
+                    <input type="checkbox" name="ActivityCategories" value="@activityTag.ActivityCategory" checked="@checkedActivities.Contains(activityTag.ActivityCategory)" />
+                    <img src="@activityTag.IconUrl" />
+                </div>
+            }
+        </div>
+
+        <b>Geschlechtsbeschränkung</b>
+        <div class="gendergrid">
+            @foreach (var genderRestrictionTag in Model.AllGenderRestrictionTags)
+            {
+                <div>
+                    <input type="radio" name="GenderRestriction" value="@genderRestrictionTag.GenderRestriction" checked="@(checkedGenderRestriction == genderRestrictionTag.GenderRestriction)" />
+                    <img src="@genderRestrictionTag.IconUrl" />
+                </div>
+            }
+        </div>
+
+        <b>Max. Teilnehmer</b>
+        <div>
+            <input id="participantsslider" class="slider" type="range" min="2" max="20" name="MaxParticipants" value="@maxParticipants" />
+            <div class="right">
+                <input id="participantsslidervalue" type="number" class="valuelabel" min="2" max="20" />
+                <span>Personen</span>
+            </div>
+        </div>
+
+        <b>Datum und Zeit</b>
+        <input id="datetimecalender" type="datetime-local" class="hcenter" name="MeetupDate" value="@meetupDateTime" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
+
+        @if (Model.SportGroupToEdit != null)
+        {
+            <input type="hidden" name="groupId" value="@Model.SportGroupToEdit.Id" />
+        }
+
+        <input id="submitbutton" type="submit" class="primarybutton hcenter" value="@submitButtonText" />
+    </form>
+    <div>
+        @*insert map here*@
+    </div>
+</div>
+
+<script src="~/js/createeditgroup.js" asp-append-version="true"></script>
+

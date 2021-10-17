@@ -77,6 +77,9 @@ namespace Speet.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("MaxParticipants")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("MeetupDate")
                         .HasColumnType("TEXT");
 

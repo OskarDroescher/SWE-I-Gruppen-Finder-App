@@ -53,6 +53,7 @@ namespace Speet.Migrations
                     GroupName = table.Column<string>(type: "TEXT", nullable: false),
                     Location = table.Column<string>(type: "TEXT", nullable: false),
                     MeetupDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    MaxParticipants = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedByGoogleId = table.Column<long>(type: "INTEGER", nullable: false),
                     GenderRestrictionTagGenderRestriction = table.Column<string>(type: "TEXT", nullable: true)
                 },
