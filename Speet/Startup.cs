@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,6 +41,13 @@ namespace Speet
 
                 options.ClientId = googleAuthNSection["ClientId"];
                 options.ClientSecret = googleAuthNSection["ClientSecret"];
+                              
+                options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "UserId");
+                options.ClaimActions.MapJsonKey(ClaimTypes.Email, "EmailAddress", ClaimValueTypes.Email);
+                options.ClaimActions.MapJsonKey(ClaimTypes.Name, "Name");
+
+                options.SaveTokens = true;
+
             });
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();

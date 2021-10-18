@@ -18,12 +18,15 @@ namespace Speet.Controllers
         {
             var properties = new AuthenticationProperties { RedirectUri = "/" };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+
+            
         }
 
         [Route("Index")]
         public async Task<IActionResult> GoogleResponse()
         {
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
 
             var claims = result.Principal.Identities
                 .FirstOrDefault().Claims.Select(claim => new
@@ -37,16 +40,20 @@ namespace Speet.Controllers
             return Json(claims);
         }
 
+        [HttpGet, Route("Logout")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
             return new RedirectResult(url: "/SportGroup/DiscoverGroups", permanent: true, preserveMethod: true);
+
+
         }
 
-        [Authorize]
+        [HttpGet, Authorize]
         public IActionResult Login()
         {
             return View();
+            
         }
     }
 }
