@@ -10,16 +10,16 @@ namespace Speet.Models.HttpRequestModels
         public List<GenderRestrictionType> GenderRestrictions { get; set; }
         public int MaxDistance { get; set; }
         public int MaxParticipants { get; set; }
-        public DateTime MaxDate { get; set; }
-        public DateTime MinDate { get; set; }
+        public DateTime? MinDate { get; set; }
+        public DateTime? MaxDate { get; set; }
 
         public FilterSettingsRequest()
         {
             //Default values on first loadup of DiscoverGroups view
             ActivityCategories = new List<ActivityCategoryType>();
             GenderRestrictions = new List<GenderRestrictionType>();
-            MaxDistance = 250;
-            MaxParticipants = 20;
+            MaxDistance = ApplicationConstants.MaxShownSportGroupDistance;
+            MaxParticipants = ApplicationConstants.MaxSportGroupParticipants;
         }
 
         public string GetFilterSettingsQueryString()
@@ -34,18 +34,17 @@ namespace Speet.Models.HttpRequestModels
             queryString.Add("MaxDistance", MaxDistance.ToString());
             queryString.Add("MaxParticipants", MaxParticipants.ToString());
 
-            //Check if default value to get same result in URL bar as on filter update
-            string minDateString = MinDate.ToString("yyyy-MM-dd");
-            if (minDateString == "0001-01-01")
-                minDateString = string.Empty;
+            string minDate = string.Empty;
+            if (MinDate.HasValue)
+                minDate = MinDate.Value.ToString("yyyy-MM-ddTHH:mm");
 
-            queryString.Add("MinDate", minDateString);
+            queryString.Add("MinDate", minDate);
 
-            string maxDateString = MaxDate.ToString("yyyy-MM-dd");
-            if (maxDateString == "0001-01-01")
-                maxDateString = string.Empty;
+            string maxDate = string.Empty;
+            if (MaxDate.HasValue)
+                maxDate = MaxDate.Value.ToString("yyyy-MM-ddTHH:mm");
 
-            queryString.Add("MaxDate", maxDateString);
+            queryString.Add("MaxDate", maxDate);
 
             return queryString.ToString();
         }

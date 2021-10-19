@@ -2,6 +2,7 @@
 
 @{
     string action;
+    string httpMethod;
     string groupName;
     List<ActivityCategoryType> checkedActivities;
     GenderRestrictionType checkedGenderRestriction;
@@ -13,10 +14,11 @@
     {
         ViewData["Title"] = "Gruppe erstellen";
         action = "AddGroup";
+        httpMethod = "post";
         groupName = string.Empty;
         checkedActivities = Enumerable.Empty<ActivityCategoryType>().ToList();
         checkedGenderRestriction = GenderRestrictionType.None;
-        maxParticipants = 20;
+        maxParticipants = ApplicationConstants.MaxSportGroupParticipants;
         meetupDateTime = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
         submitButtonText = "Gruppe erstellen";
     }
@@ -24,6 +26,7 @@
     {
         ViewData["Title"] = "Gruppe bearbeiten";
         action = "UpdateGroup";
+        httpMethod = "put";
         groupName = Model.SportGroupToEdit.GroupName;
         checkedActivities = Model.SportGroupToEdit.ActivityTags.Select(t => t.ActivityCategory).ToList();
         checkedGenderRestriction = Model.SportGroupToEdit.GenderRestrictionTag.GenderRestriction;
@@ -36,7 +39,7 @@
 <link rel="stylesheet" href="~/css/createeditgroup.css" />
 
 <div class="viewcontainer">
-    <form class="propertiesformgrid" asp-controller="SportGroup" asp-action="@action" method="get">
+    <form class="propertiesformgrid" asp-controller="SportGroup" asp-action="@action" method="@httpMethod">
         <h3 class="propertiesheading">Eigenschaften</h3>
 
         <b>Gruppenname</b>
@@ -68,7 +71,7 @@
 
         <b>Max. Teilnehmer</b>
         <div>
-            <input id="participantsslider" class="slider" type="range" min="2" max="20" name="MaxParticipants" value="@maxParticipants" />
+            <input id="participantsslider" class="slider" type="range" min="@ApplicationConstants.MinSportGroupParticipants" max="@ApplicationConstants.MaxSportGroupParticipants" name="MaxParticipants" value="@maxParticipants" />
             <div class="right">
                 <input id="participantsslidervalue" type="number" class="valuelabel" min="2" max="20" />
                 <span>Personen</span>

@@ -9,8 +9,6 @@ namespace Speet.Models.ContainerModels
         public FilterSettingsRequest FilterSettings { get; set; }
         public List<ActivityTag> AllActivityTags { get; set; }
         public List<GenderRestrictionTag> AllGenderRestrictionTags { get; set; }
-        public int PageIndex { get; set; }
-        public int[] NextPageIndexes { get; set; }
-        public int[] PreviousPageIndexes { get; set; }
+        public PaginationInfo PaginationInfo { get; set; }
     }
 }
