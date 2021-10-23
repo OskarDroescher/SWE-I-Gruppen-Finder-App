@@ -7,18 +7,17 @@
 
 /*Filter*/
 .filtercontainer {
-    border-bottom: 1px solid Black;
-    border-right: 1px solid Black;
+    background-color: #0E5090;
 }
 
-#filterwrappergrid {
+#filterformgrid {
     display: grid;
     grid-template-columns: 200px 500px;
     grid-row-gap: 20px;
     padding: 5px 5px;
 }
 
-    #filterwrappergrid p {
+    #filterformgrid p {
         margin: 0;
     }
 
@@ -43,7 +42,7 @@
 
 .gendergrid {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(4, auto);
 }
 
     .gendergrid input {
@@ -61,40 +60,6 @@
 .dategrid {
     display: grid;
     grid-template-columns: auto auto;
-}
-
-.slider {
-    -webkit-appearance: none;
-    outline: none;
-    width: 100%;
-    height: 10px;
-    background: #d3d3d3;
-    border-radius: 20px;
-}
-
-    .slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        cursor: pointer;
-        width: 20px;
-        height: 20px;
-        background: #ffB01f;
-        border-radius: 100%;
-    }
-
-    .slider::-ms-thumb {
-        cursor: pointer;
-        width: 20px;
-        height: 20px;
-        background: #ffB01f;
-        border-radius: 100%;
-    }
-
-.valuelabel {
-    border: none;
-    background: #1265b5;
-    text-align: right;
-    width: 30px;
-    color: #ffffff;
 }
 
 .filterheading {
@@ -120,7 +85,7 @@
 
 /*Map*/
 .mapcontainer {
-    border-bottom: 1px solid Black;
+    background-color: #0E5090;
 }
 
 /*SportGroups table*/
@@ -129,11 +94,19 @@
     margin-top: 10px;
 }
 
+.sportgroupstable th {
+    word-wrap: break-word;
+}
+
 .tablerow {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     font-size: 18px;
 }
+
+    .tablerow td {
+        height: 85px;
+    }
 
 .firsttablecolumn {
     padding-left: 10px;

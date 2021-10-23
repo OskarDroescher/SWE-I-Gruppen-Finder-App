@@ -9,7 +9,7 @@ using Speet.Models;
 namespace Speet.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211016152102_DatabaseMigration")]
+    [Migration("20211019125831_DatabaseMigration")]
     partial class DatabaseMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -67,15 +67,3 @@ function resetFilterAndSubmit() {
     maxdatecalender.value = '';
     submitbutton.click();
 }
-
-//Set up filter
-window.onload = function () {
-    mindatecalender.min = new Date().toLocaleDateString('en-ca')
-    maxdatecalender.min = new Date().toLocaleDateString('en-ca')
-
-    if (mindatecalender.value == '0001-01-01')
-        mindatecalender.value = '';
-
-    if (maxdatecalender.value == '0001-01-01')
-        maxdatecalender.value = '';
-}

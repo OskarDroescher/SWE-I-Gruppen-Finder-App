@@ -7,16 +7,22 @@
     List<GenderRestrictionType> checkedGenderRestrictions = Model.FilterSettings.GenderRestrictions;
     int maxDistance = Model.FilterSettings.MaxDistance;
     int maxParticipants = Model.FilterSettings.MaxParticipants;
-    string minDate = Model.FilterSettings.MinDate.ToString("yyyy-MM-dd");
-    string maxDate = Model.FilterSettings.MaxDate.ToString("yyyy-MM-dd");
     string filterSettingsQuery = Model.FilterSettings.GetFilterSettingsQueryString();
+
+    string minDate = string.Empty;
+    if (Model.FilterSettings.MinDate.HasValue)
+        minDate = Model.FilterSettings.MinDate.Value.ToString("yyyy-MM-ddTHH:mm");
+
+    string maxDate = string.Empty;
+    if (Model.FilterSettings.MaxDate.HasValue)
+        maxDate = Model.FilterSettings.MaxDate.Value.ToString("yyyy-MM-ddTHH:mm");
 }
 
     <link rel="stylesheet" href="~/css/discovergroups.css" />
 
     <div class="viewcontainer">
         <div class="filtercontainer">
-            <form id="filterwrappergrid" asp-controller="SportGroup" asp-action="DiscoverGroups" method="get">
+            <form id="filterformgrid" asp-controller="SportGroup" asp-action="DiscoverGroups" method="get">
                 <h3>Filter</h3>
                 <div class="text-right vcenter">
                     <span id="resetbutton">Zurücksetzen</span>
@@ -47,9 +53,9 @@
 
                 <b>Max. Entfernung</b>
                 <div>
-                    <input id="maxdistanceslider" class="slider" type="range" min="1" max="250" name="MaxDistance" value="@maxDistance" />
+                    <input id="maxdistanceslider" class="slider" type="range" min="@ApplicationConstants.MinShownSportGroupDistance" max="@ApplicationConstants.MaxShownSportGroupDistance" name="MaxDistance" value="@maxDistance" />
                     <div class="right">
-                        <input id="maxdistanceslidervalue" class="valuelabel" min="1" max="250" />
+                        <input id="maxdistanceslidervalue" type="number" class="valuelabel" min="1" max="250" />
                         <span>km</span>
                     </div>
                 </div>
@@ -57,9 +63,9 @@
 
                 <b>Max. Teilnehmer</b>
                 <div>
-                    <input id="participantsslider" class="slider" type="range" min="2" max="20" name="MaxParticipants" value="@maxParticipants" />
+                    <input id="participantsslider" class="slider" type="range" min="@ApplicationConstants.MinSportGroupParticipants" max="@ApplicationConstants.MaxSportGroupParticipants" name="MaxParticipants" value="@maxParticipants" />
                     <div class="right">
-                        <input id="participantsslidervalue" class="valuelabel" min="2" max="20" />
+                        <input id="participantsslidervalue" type="number" class="valuelabel" min="2" max="20" />
                         <span>Personen</span>
                     </div>
                 </div>
@@ -67,13 +73,13 @@
 
                 <b>Datum</b>
                 <div class="dategrid">
-                    <div class="inline-block hcenter">
+                    <div class="hcenter">
                         <p>Von</p>
-                        <input id="mindate" type="date" name="MinDate" value="@minDate" />
+                        <input id="mindate" type="datetime-local" name="MinDate" value="@minDate" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")"/>
                     </div>
-                    <div class="inline-block hcenter">
+                    <div class="hcenter">
                         <p>Bis</p>
-                        <input id="maxdate" type="date" name="MaxDate" placeholder="Test" value="@maxDate" />
+                        <input id="maxdate" type="datetime-local" name="MaxDate" value="@maxDate" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")"/>
                     </div>
                 </div>
 
@@ -116,15 +122,15 @@
                     @foreach (var sportGroup in Model.SportGroupsToDisplay)
                     {
                         <tr class="tablerow">
-                            <td height="75px" class="firsttablecolumn">
+                            <td class="firsttablecolumn">
                                 <span>@sportGroup.GroupName</span>
                             </td>
 
-                            <td height="75px" class="centerText">
-                                <span>@sportGroup.Participants.Count</span>
+                            <td class="centerText">
+                                <span>@sportGroup.Participants.Count / @sportGroup.MaxParticipants</span>
                             </td>
 
-                            <td height="75px" class="centerText">
+                            <td class="centerText">
                                 @{
                                     foreach (var activityTag in sportGroup.ActivityTags)
                                     {
@@ -137,15 +143,15 @@
                                 }
                             </td>
 
-                            <td height="75px" class="centerText">
+                            <td class="centerText">
                                 <img class="mapicon" src="/icons/placeholder.png" />
                             </td>
 
-                            <td height="75px" class="centerText">
+                            <td class="centerText">
                                 <span>@sportGroup.MeetupDate.ToString("dd.MM.yyyy") / @sportGroup.MeetupDate.ToString("H:mm") Uhr</span>
                             </td>
 
-                            <td height="75px" class="centerText lasttablecolumn">
+                            <td class="centerText lasttablecolumn">
                                 <input class="primarybutton center joinbutton" type="button" value="Beitreten" />
                             </td>
                         </tr>
@@ -153,21 +159,27 @@
                 </table>
 
                 <div class="paginationcontainer hcenter">
-                    <input class="primarybutton paginationbutton adjacentpagebutton use-all-space" type="button" value="Zurück" onclick="location.href='/SportGroup/DiscoverGroups/@(Model.PageIndex-1)?@filterSettingsQuery'" />
-
-                    @foreach (var prevPageIndex in Model.PreviousPageIndexes)
+                    @if (Model.PaginationInfo.PreviousPageIndexes.Count() > 0)
                     {
-                        <input class="primarybutton paginationbutton pageindexbutton use-all-space" type="button" value="@prevPageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@prevPageIndex)?@filterSettingsQuery'" />
+                        <input class="primarybutton paginationbutton adjacentpagebutton use-all-space" type="button" value="Zurück" onclick="location.href='/SportGroup/DiscoverGroups/@(Model.PaginationInfo.CurrentPageIndex-1)?@filterSettingsQuery'" />
                     }
 
-                    <input class="primarybutton paginationbutton pageindexbutton currentpagebutton use-all-space" type="button" value="@Model.PageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@Model.PageIndex?@filterSettingsQuery'" />
+                    @foreach (var prevPageIndex in Model.PaginationInfo.PreviousPageIndexes)
+                    {
+                        <input class="primarybutton paginationbutton pageindexbutton use-all-space" type="button" value="@prevPageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@prevPageIndex?@filterSettingsQuery'" />
+                    }
 
-                    @foreach (var nextPageIndex in Model.NextPageIndexes)
+                    <input class="primarybutton paginationbutton pageindexbutton currentpagebutton use-all-space" type="button" value="@Model.PaginationInfo.CurrentPageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@Model.PaginationInfo.CurrentPageIndex?@filterSettingsQuery'" />
+
+                    @foreach (var nextPageIndex in Model.PaginationInfo.NextPageIndexes)
                     {
                         <input class="primarybutton paginationbutton pageindexbutton use-all-space" type="button" value="@nextPageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@nextPageIndex?@filterSettingsQuery'" />
                     }
 
-                    <input class="primarybutton paginationbutton adjacentpagebutton use-all-space" value="Weiter" onclick="location.href='/SportGroup/DiscoverGroups/@(Model.PageIndex+1)?@filterSettingsQuery'" />
+                    @if (Model.PaginationInfo.NextPageIndexes.Count() > 0)
+                    {
+                        <input class="primarybutton paginationbutton adjacentpagebutton use-all-space" type="button" value="Weiter" onclick="location.href='/SportGroup/DiscoverGroups/@(Model.PaginationInfo.CurrentPageIndex+1)?@filterSettingsQuery'" />
+                    }
                 </div>
             }
             else
@@ -180,7 +192,7 @@
 
     </div>
 
-<script src="~/js/sportgroupsfilter.js" asp-append-version="true"></script>
+<script src="~/js/discovergroups.js" asp-append-version="true"></script>
 
 
     

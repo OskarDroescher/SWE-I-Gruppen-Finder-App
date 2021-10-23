@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Speet.Models;
 using Speet.Models.ContainerModels;
 using Speet.Models.HttpRequestModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,19 +21,46 @@ namespace Speet.Controllers
         [HttpGet]
         public IActionResult DiscoverGroups(FilterSettingsRequest filterSettings, int pageIndex = 1)
         {
-            List<SportGroup> groupsToDisplay = _db.SportGroup.ToList();
+            List<SportGroup> filteredGroups = GetFilteredSportGroups(filterSettings);
+            List<SportGroup> groupsOnPage = GetSportGroupsOnPage(pageIndex, filteredGroups);
+
             DiscoverGroupsContainer viewContainer = new DiscoverGroupsContainer()
             {
-                SportGroupsToDisplay = groupsToDisplay,
+                SportGroupsToDisplay = groupsOnPage,
                 FilterSettings = filterSettings,
                 AllActivityTags = _db.ActivityTag.AsNoTracking().ToList(),
                 AllGenderRestrictionTags = _db.GenderRestrictionTag.AsNoTracking().ToList(),
-                PageIndex = pageIndex,
-                NextPageIndexes = new int[] {2, 3, 4, 5},
-                PreviousPageIndexes = new int[] {}
+                PaginationInfo = new PaginationInfo(pageIndex, filteredGroups.Count)
             };
 
             return View(viewContainer);
+        }
+
+        private List<SportGroup> GetFilteredSportGroups(FilterSettingsRequest filterSettings)
+        {
+            var groupsToDisplayQuery = _db.SportGroup.AsQueryable();
+
+            if (filterSettings.ActivityCategories.Count > 0)
+                groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => sg.ActivityTags.Any(at => filterSettings.ActivityCategories.Contains(at.ActivityCategory)));
+
+            if (filterSettings.GenderRestrictions.Count > 0)
+                groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => filterSettings.GenderRestrictions.Contains(sg.GenderRestrictionTag.GenderRestriction));
+
+            if (filterSettings.MinDate.HasValue)
+                groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => filterSettings.MinDate.Value.CompareTo(sg.MeetupDate) <= 0);
+
+            if (filterSettings.MaxDate.HasValue)
+                groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => filterSettings.MaxDate.Value.CompareTo(sg.MeetupDate) >= 0);
+
+            groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => sg.MaxParticipants <= filterSettings.MaxParticipants);
+
+            return groupsToDisplayQuery.ToList();
+        }
+
+        private List<SportGroup> GetSportGroupsOnPage(int pageIndex, List<SportGroup> filteredGroups)
+        {
+            int firstGroupOnPageIndex = (pageIndex * ApplicationConstants.SportGroupsPerPage - ApplicationConstants.SportGroupsPerPage);
+            return filteredGroups.Skip(firstGroupOnPageIndex).Take(ApplicationConstants.SportGroupsPerPage).ToList();
         }
 
         public IActionResult MyGroups()
@@ -70,19 +96,21 @@ namespace Speet.Controllers
             return View("CreateEditGroup", viewContainer);
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult AddGroup(AddEditGroupRequest request)
         {
+            User groupCreator = GetTestUser();
             SportGroup newGroup = new SportGroup()
             {
                 GroupName = request.GroupName,
                 Location = "Not implemented yet",
                 MeetupDate = request.MeetupDate,
                 MaxParticipants = request.MaxParticipants,
-                CreatedBy = GetTestUser(),
+                CreatedBy = groupCreator,
                 ActivityTags = _db.ActivityTag.Where(at => request.ActivityCategories.Contains(at.ActivityCategory)).ToList(),
                 GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction)
-        };
+            };
+            newGroup.Participants.Add(groupCreator);
 
             _db.SportGroup.Add(newGroup);
             _db.SaveChanges();
@@ -90,7 +118,7 @@ namespace Speet.Controllers
             return Redirect("CreateGroup");
         }
 
-        [HttpGet]
+        [HttpPut]
         public IActionResult UpdateGroup(AddEditGroupRequest request, long groupId)
         {
             SportGroup groupToEdit = _db.SportGroup.Find(groupId);
@@ -101,7 +129,6 @@ namespace Speet.Controllers
             groupToEdit.Location = "Not implemented yet";
             groupToEdit.MeetupDate = request.MeetupDate;
             groupToEdit.MaxParticipants = request.MaxParticipants;
-            groupToEdit.CreatedBy = GetTestUser();
             groupToEdit.ActivityTags = _db.ActivityTag.Where(at => request.ActivityCategories.Contains(at.ActivityCategory)).ToList();
             groupToEdit.GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction);
 
@@ -115,13 +142,13 @@ namespace Speet.Controllers
             User testUser = _db.User.Find((long)1);
             if(testUser == null)
             {
-                User user = new User()
+                testUser = new User()
                 {
                     GoogleId = 1,
                     Gender = GenderType.Male,
                 };
 
-                _db.User.Add(user);
+                _db.User.Add(testUser);
                 _db.SaveChanges();
             }
 
