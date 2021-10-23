@@ -32,8 +32,19 @@ namespace Speet.Controllers
                 AllGenderRestrictionTags = _db.GenderRestrictionTag.AsNoTracking().ToList(),
                 PaginationInfo = new PaginationInfo(pageIndex, filteredGroups.Count)
             };
+            if (User.Identity.IsAuthenticated) { 
+                return View(viewContainer); 
+            }
+            else
+            {
+                return RedirectToAction("Start", "SportGroup");
+            }
+            
+        }
 
-            return View(viewContainer);
+        public IActionResult Start()
+        {
+            return View();
         }
 
         private List<SportGroup> GetFilteredSportGroups(FilterSettingsRequest filterSettings)

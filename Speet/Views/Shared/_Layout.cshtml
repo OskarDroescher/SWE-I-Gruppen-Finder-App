@@ -9,29 +9,31 @@
     <link rel="stylesheet" href="~/css/masterlayout.css" />
 </head>
 <body class="masterbody use-all-space">
-    <header>
-        <nav class="topnavbar">
-            <input id="sidebarbutton" class="topnavbaritem" type="image" src="~/icons/menu-icon.png" />
-            <img id="topnavlogo" class="topnavbaritem" src="~/icons/speet-logo.png" />
-            <p id="topnavtitle" class="topnavbaritem">@ViewData["Title"]</p>
-            <partial name="_LoginPartial" />
-        </nav>
-    </header>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <header>
+            <nav class="topnavbar">
+                <input id="sidebarbutton" class="topnavbaritem" type="image" src="~/icons/menu-icon.png" />
+                <img id="topnavlogo" class="topnavbaritem" src="~/icons/speet-logo.png" />
+                <p id="topnavtitle" class="topnavbaritem">@ViewData["Title"]</p>
+                <partial name="_LoginPartial" />
+            </nav>
+        </header>
 
-    <div class="sidenavbar">
-        <ul>
-            <li>
-                <a asp-controller="SportGroup" asp-action="DiscoverGroups">Gruppe suchen</a>
-            </li>
-            <li>
-                <a asp-controller="SportGroup" asp-action="MyGroups">Meine Gruppen</a>
-            </li>
-            <li>
-                <a asp-controller="SportGroup" asp-action="CreateGroup">Gruppe erstellen</a>
-            </li>
-        </ul>
-    </div>
-
+        <div class="sidenavbar">
+            <ul>
+                <li>
+                    <a asp-controller="SportGroup" asp-action="DiscoverGroups">Gruppe suchen</a>
+                </li>
+                <li>
+                    <a asp-controller="SportGroup" asp-action="MyGroups">Meine Gruppen</a>
+                </li>
+                <li>
+                    <a asp-controller="SportGroup" asp-action="CreateGroup">Gruppe erstellen</a>
+                </li>
+            </ul>
+        </div>
+    }
 
     <div class="use-all-space">
         <main class="use-all-space" role="main">
@@ -40,11 +42,11 @@
     </div>
 
     @*uncomment when implemented
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - Speet - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>*@
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2021 - Speet - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>*@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
