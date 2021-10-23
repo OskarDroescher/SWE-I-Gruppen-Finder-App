@@ -87,8 +87,19 @@
             </form>
         </div>
 
-        <div class="mapcontainer">
+        <div class="mapcontainer" id="map">
             @*insert map here*@
+            <script>
+                function initMap() {
+                    const myLatLng = { lat: -25.363, lng: 131.044 };
+                    const map = new google.maps.Map(document.getElementById("map"), {
+                        zoom: 4,
+                        center: myLatLng,
+                    });
+                }
+            </script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyFncc8DAmnkXS1XPR9IIDcvB7DeCQ84c&callback=initMap&v=weekly"
+                    async defer></script>
         </div>
 
         @{
