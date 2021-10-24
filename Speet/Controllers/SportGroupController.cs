@@ -68,15 +68,24 @@ namespace Speet.Controllers
             return groupsToDisplayQuery.ToList();
         }
 
-        private List<SportGroup> GetSportGroupsOnPage(int pageIndex, List<SportGroup> filteredGroups)
+        private List<SportGroup> GetSportGroupsOnPage(int pageIndex, List<SportGroup> groups)
         {
             int firstGroupOnPageIndex = (pageIndex * ApplicationConstants.SportGroupsPerPage - ApplicationConstants.SportGroupsPerPage);
-            return filteredGroups.Skip(firstGroupOnPageIndex).Take(ApplicationConstants.SportGroupsPerPage).ToList();
+            return groups.Skip(firstGroupOnPageIndex).Take(ApplicationConstants.SportGroupsPerPage).ToList();
         }
 
-        public IActionResult MyGroups()
+        public IActionResult MyGroups(int pageindex = 1)
         {
-            return View();
+            User user = GetTestUser();
+            List<SportGroup> groupsOnPage = GetSportGroupsOnPage(pageindex, user.JoinedGroups.ToList());
+            MyGroupsContainer viewContainer = new MyGroupsContainer()
+            {
+                GroupsToDisplay = groupsOnPage,
+                UserToDisplay = user,
+                PaginationInfo = new PaginationInfo(pageindex, user.JoinedGroups.Count)
+            };
+
+            return View(viewContainer);
         }
 
         public IActionResult CreateGroup()
@@ -129,7 +138,7 @@ namespace Speet.Controllers
             return Redirect("CreateGroup");
         }
 
-        [HttpPut]
+        [HttpPost] //Put verb not supported until HTML version 4
         public IActionResult UpdateGroup(AddEditGroupRequest request, long groupId)
         {
             SportGroup groupToEdit = _db.SportGroup.Find(groupId);
@@ -140,12 +149,29 @@ namespace Speet.Controllers
             groupToEdit.Location = "Not implemented yet";
             groupToEdit.MeetupDate = request.MeetupDate;
             groupToEdit.MaxParticipants = request.MaxParticipants;
-            groupToEdit.ActivityTags = _db.ActivityTag.Where(at => request.ActivityCategories.Contains(at.ActivityCategory)).ToList();
             groupToEdit.GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction);
+
+            //Warning: overwriting the groupToEdit.ActivityTags reference directly could throw an exception, thats why the list is just refilled
+            groupToEdit.ActivityTags.Clear();
+            List<ActivityTag> requestedActivityTags = request.ActivityCategories.Select(ac => _db.ActivityTag.Find(ac)).ToList();
+            requestedActivityTags.ForEach(at => groupToEdit.ActivityTags.Add(at));
 
             _db.SaveChanges();
 
             return Redirect("MyGroups");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteGroup(long groupId)
+        {
+            SportGroup groupToDelete = _db.SportGroup.Find(groupId);
+            if (groupToDelete == null)
+                return Json(new { success = false });
+
+            _db.SportGroup.Remove(groupToDelete);
+            _db.SaveChanges();
+
+            return Json(new { success = true });
         }
 
         private User GetTestUser()

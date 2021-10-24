@@ -8,9 +8,9 @@ namespace Speet.Models
         public int[] PreviousPageIndexes { get; private set; }
         public int[] NextPageIndexes { get; private set; }
 
-        public PaginationInfo(int pageIndex, int numberOfGroups)
+        public PaginationInfo(int pageIndex, int totalNumberOfGroups)
         {
-            int totalPages = GetTotalPages(numberOfGroups);
+            int totalPages = GetTotalPages(totalNumberOfGroups);
             CurrentPageIndex = pageIndex;
             PreviousPageIndexes = GetPreviousPageIndexes(totalPages);
             NextPageIndexes = GetNextPageIndexes(totalPages);

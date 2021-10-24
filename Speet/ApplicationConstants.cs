@@ -9,5 +9,6 @@
         public const int MaxSportGroupParticipants = 20;
         public const int MinShownSportGroupDistance = 0;
         public const int MaxShownSportGroupDistance = 250;
+        public const int MaxGroupNameLength = 75;
     }
 }

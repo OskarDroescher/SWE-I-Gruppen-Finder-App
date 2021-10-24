@@ -31,6 +31,12 @@
     margin: auto 0;
 }
 
+.centercontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .center {
     margin: auto auto;
 }
@@ -49,6 +55,18 @@
 
     .primarybutton:hover {
         background: #ffc762;
+    }
+
+.dangerbutton {
+    background: #ff4040;
+    cursor: pointer;
+    font-weight: bold;
+    border: solid 3px Black;
+    border-radius: 10px;
+}
+
+    .dangerbutton:hover {
+        background: #ff5a5a;
     }
 
 .slider {
@@ -102,6 +120,12 @@
     padding-right: 5px;
 }
 
-.validationtext {
-    color: red;
+.oneline {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.hidden {
+    display: none;
+    overflow: hidden;
 }

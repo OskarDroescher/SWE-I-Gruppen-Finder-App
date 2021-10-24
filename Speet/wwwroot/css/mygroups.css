@@ -1,0 +1,77 @@
+﻿/*View general*/
+.viewcontainer {
+    display: grid;
+    grid-template-columns: 100%;
+}
+
+/*SportGroups table*/
+.sportgroupstable {
+    grid-column: span 2;
+    margin-top: 10px;
+}
+
+    .sportgroupstable th {
+        word-wrap: break-word;
+    }
+
+.tablerow {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    font-size: 18px;
+}
+
+    .tablerow td {
+        height: 85px;
+    }
+
+.firsttablecolumn {
+    padding-left: 10px;
+}
+
+.lasttablecolumn {
+    padding-right: 10px;
+}
+
+.mapicon {
+    width: 40px;
+    height: 40px;
+}
+
+.tagicon {
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+}
+
+.tablebutton {
+    width: 180px;
+    height: 50px;
+}
+
+/*Pagination*/
+.paginationcontainer {
+    display: inline-block;
+    background: #ffB01f;
+    height: 40px;
+    margin: 20px auto;
+    border: solid 3px Black;
+    border-radius: 10px;
+}
+
+.adjacentpagebutton {
+    width: 100px;
+}
+
+.pageindexbutton {
+    width: 60px;
+}
+
+.currentpagebutton {
+    text-decoration-line: underline;
+}
+
+.paginationbutton {
+    background: transparent;
+    border: none;
+    text-align: center;
+}

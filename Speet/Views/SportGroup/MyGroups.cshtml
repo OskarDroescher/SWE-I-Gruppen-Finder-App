@@ -1,7 +1,116 @@
-﻿
+﻿@model MyGroupsContainer
+
 @{
     ViewData["Title"] = "Meine Gruppen";
 }
 
-<h1>MyGroups</h1>
+<link rel="stylesheet" href="~/css/mygroups.css" />
+
+
+@if (Model.UserToDisplay.CreatedGroups.Count > 0)
+{
+    <div class="viewcontainer">
+        <table class="sportgroupstable">
+            <tr>
+                <th width="40%">
+                    <h3 class="centerText">Gruppenname</h3>
+                </th>
+
+                <th width="10%">
+                    <h3 class="centerText">Teilnehmer</h3>
+                </th>
+
+                <th width="15%">
+                    <h3 class="centerText">Tags</h3>
+                </th>
+
+                <th width="10%">
+                    <h3 class="centerText">Datum</h3>
+                </th>
+
+                <th width="25%"></th>
+            </tr>
+
+            @foreach (var sportGroup in Model.GroupsToDisplay)
+            {
+                <tr class="tablerow">
+                    <td class="firsttablecolumn">
+                        <div id="groupid" class="hidden">@sportGroup.Id</div>
+                        <span id="groupname">@sportGroup.GroupName</span>
+                    </td>
+
+                    <td class="centerText oneline">
+                        <span>@sportGroup.Participants.Count / @sportGroup.MaxParticipants</span>
+                    </td>
+
+                    <td class="centerText">
+                        @{
+                            foreach (var activityTag in sportGroup.ActivityTags)
+                            {
+                                <img class="tagicon" src="@activityTag.IconUrl" />
+                            }
+                            if (sportGroup.GenderRestrictionTag != null)
+                            {
+                                <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" />
+                            }
+                        }
+                    </td>
+
+                    <td class="centerText oneline">
+                        <span>@sportGroup.MeetupDate.ToString("dd.MM.yyyy") / @sportGroup.MeetupDate.ToString("H:mm") Uhr</span>
+                    </td>
+
+                    <td class="centerText lasttablecolumn">
+                        <div class="oneline">
+                            @if (Model.UserToDisplay.GoogleId == sportGroup.CreatedBy.GoogleId)
+                            {
+                                <input class="primarybutton center tablebutton" type="button" value="Bearbeiten" onclick="location.href='/SportGroup/EditGroup/?groupId=@(sportGroup.Id)'"/>
+                                <input class="dangerbutton center tablebutton" type="button" value="Löschen" /> // See mygroups.js for button logic
+                            }
+                            else
+                            {
+                                <input class="primarybutton center tablebutton" type="button" value="Details" /> // Not implemented yet
+                                <input class="primarybutton center tablebutton" type="button" value="Austreten" /> //Not implemented yet
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </table>
+
+        <div class="paginationcontainer">
+            @if (Model.PaginationInfo.PreviousPageIndexes.Count() > 0)
+            {
+                <input class="primarybutton paginationbutton adjacentpagebutton use-all-space" type="button" value="Zurück" onclick="location.href='/SportGroup/MyGroups/@(Model.PaginationInfo.CurrentPageIndex-1)'" />
+            }
+
+            @foreach (var prevPageIndex in Model.PaginationInfo.PreviousPageIndexes)
+            {
+                <input class="primarybutton paginationbutton pageindexbutton use-all-space" type="button" value="@prevPageIndex" onclick="location.href='/SportGroup/MyGroups/@prevPageIndex'" />
+            }
+
+            <input class="primarybutton paginationbutton pageindexbutton currentpagebutton use-all-space" type="button" value="@Model.PaginationInfo.CurrentPageIndex" onclick="location.href='/SportGroup/MyGroups/@Model.PaginationInfo.CurrentPageIndex'" />
+
+            @foreach (var nextPageIndex in Model.PaginationInfo.NextPageIndexes)
+            {
+                <input class="primarybutton paginationbutton pageindexbutton use-all-space" type="button" value="@nextPageIndex" onclick="location.href='/SportGroup/MyGroups/@nextPageIndex'" />
+            }
+
+            @if (Model.PaginationInfo.NextPageIndexes.Count() > 0)
+            {
+                <input class="primarybutton paginationbutton adjacentpagebutton use-all-space" type="button" value="Weiter" onclick="location.href='/SportGroup/MyGroups/@(Model.PaginationInfo.CurrentPageIndex+1)'" />
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="centercontainer use-all-space">
+        <h3 class="center">Es konnten keine Gruppen gefunden werden</h3>
+    </div>
+}
+
+<script src="~/js/mygroups.js" asp-append-version="true"></script>
+
+
 

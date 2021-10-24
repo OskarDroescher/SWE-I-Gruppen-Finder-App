@@ -2,10 +2,10 @@
 
 @{
     string action;
-    string httpMethod;
     string groupName;
     List<ActivityCategoryType> checkedActivities;
     GenderRestrictionType checkedGenderRestriction;
+    int minParticipants;
     int maxParticipants;
     string meetupDateTime;
     string submitButtonText;
@@ -14,10 +14,10 @@
     {
         ViewData["Title"] = "Gruppe erstellen";
         action = "AddGroup";
-        httpMethod = "post";
         groupName = string.Empty;
         checkedActivities = Enumerable.Empty<ActivityCategoryType>().ToList();
         checkedGenderRestriction = GenderRestrictionType.None;
+        minParticipants = ApplicationConstants.MinSportGroupParticipants;
         maxParticipants = ApplicationConstants.MaxSportGroupParticipants;
         meetupDateTime = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
         submitButtonText = "Gruppe erstellen";
@@ -26,12 +26,15 @@
     {
         ViewData["Title"] = "Gruppe bearbeiten";
         action = "UpdateGroup";
-        httpMethod = "put";
         groupName = Model.SportGroupToEdit.GroupName;
         checkedActivities = Model.SportGroupToEdit.ActivityTags.Select(t => t.ActivityCategory).ToList();
         checkedGenderRestriction = Model.SportGroupToEdit.GenderRestrictionTag.GenderRestriction;
+        minParticipants = Model.SportGroupToEdit.Participants.Count;
+        if (minParticipants < ApplicationConstants.MinSportGroupParticipants)
+            minParticipants = ApplicationConstants.MinSportGroupParticipants;
+
         maxParticipants = Model.SportGroupToEdit.MaxParticipants;
-        meetupDateTime = DateTime.Today.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
+        meetupDateTime = Model.SportGroupToEdit.MeetupDate.ToString("yyyy-MM-ddTHH:mm");
         submitButtonText = "Gruppe bearbeiten";
     }
 }
@@ -39,11 +42,11 @@
 <link rel="stylesheet" href="~/css/createeditgroup.css" />
 
 <div class="viewcontainer">
-    <form class="propertiesformgrid" asp-controller="SportGroup" asp-action="@action" method="@httpMethod">
+    <form class="propertiesformgrid" asp-controller="SportGroup" asp-action="@action" method="post">
         <h3 class="propertiesheading">Eigenschaften</h3>
 
         <b>Gruppenname</b>
-        <input type="text" class="textfield" name="GroupName" value="@groupName" maxlength="75"/>
+        <input type="text" class="textfield" name="GroupName" value="@groupName" maxlength="@ApplicationConstants.MaxGroupNameLength"/>
 
         <div>
             <b>Aktivitäten</b>
@@ -71,7 +74,7 @@
 
         <b>Max. Teilnehmer</b>
         <div>
-            <input id="participantsslider" class="slider" type="range" min="@ApplicationConstants.MinSportGroupParticipants" max="@ApplicationConstants.MaxSportGroupParticipants" name="MaxParticipants" value="@maxParticipants" />
+            <input id="participantsslider" class="slider" type="range" min="@minParticipants" max="@maxParticipants" name="MaxParticipants" value="@maxParticipants" />
             <div class="right">
                 <input id="participantsslidervalue" type="number" class="valuelabel" min="2" max="20" />
                 <span>Personen</span>
