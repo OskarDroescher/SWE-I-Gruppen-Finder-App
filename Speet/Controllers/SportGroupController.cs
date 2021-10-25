@@ -18,9 +18,11 @@ namespace Speet.Controllers
             _db = db;
         }
 
-        [HttpGet]
         public IActionResult DiscoverGroups(FilterSettingsRequest filterSettings, int pageIndex = 1)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Start");
+
             List<SportGroup> filteredGroups = GetFilteredSportGroups(filterSettings);
             List<SportGroup> groupsOnPage = GetSportGroupsOnPage(pageIndex, filteredGroups);
 
@@ -32,14 +34,8 @@ namespace Speet.Controllers
                 AllGenderRestrictionTags = _db.GenderRestrictionTag.AsNoTracking().ToList(),
                 PaginationInfo = new PaginationInfo(pageIndex, filteredGroups.Count)
             };
-            if (User.Identity.IsAuthenticated) { 
-                return View(viewContainer); 
-            }
-            else
-            {
-                return RedirectToAction("Start", "SportGroup");
-            }
             
+            return View(viewContainer); 
         }
 
         public IActionResult Start()
@@ -76,6 +72,9 @@ namespace Speet.Controllers
 
         public IActionResult MyGroups(int pageindex = 1)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Start");
+
             User user = GetTestUser();
             List<SportGroup> groupsOnPage = GetSportGroupsOnPage(pageindex, user.JoinedGroups.ToList());
             MyGroupsContainer viewContainer = new MyGroupsContainer()
@@ -90,6 +89,9 @@ namespace Speet.Controllers
 
         public IActionResult CreateGroup()
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Start");
+
             CreateEditGroupContainer viewContainer = new CreateEditGroupContainer()
             {
                 SportGroupToEdit = null,
@@ -102,6 +104,9 @@ namespace Speet.Controllers
 
         public IActionResult EditGroup(long groupId)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Start");
+
             SportGroup groupToEdit = _db.SportGroup.Find(groupId);
             if(groupToEdit == null)
                 return new EmptyResult();
@@ -116,9 +121,11 @@ namespace Speet.Controllers
             return View("CreateEditGroup", viewContainer);
         }
 
-        [HttpPost]
         public IActionResult AddGroup(AddEditGroupRequest request)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Start");
+
             User groupCreator = GetTestUser();
             SportGroup newGroup = new SportGroup()
             {
@@ -138,9 +145,11 @@ namespace Speet.Controllers
             return Redirect("CreateGroup");
         }
 
-        [HttpPost] //Put verb not supported until HTML version 4
         public IActionResult UpdateGroup(AddEditGroupRequest request, long groupId)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Start");
+
             SportGroup groupToEdit = _db.SportGroup.Find(groupId);
             if (groupToEdit == null)
                 return new EmptyResult();
@@ -164,6 +173,9 @@ namespace Speet.Controllers
         [HttpDelete]
         public IActionResult DeleteGroup(long groupId)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Start");
+
             SportGroup groupToDelete = _db.SportGroup.Find(groupId);
             if (groupToDelete == null)
                 return Json(new { success = false });

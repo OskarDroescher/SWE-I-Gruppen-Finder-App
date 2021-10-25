@@ -22,7 +22,7 @@
 
     <div class="viewcontainer">
         <div class="filtercontainer">
-            <form id="filterformgrid" asp-controller="SportGroup" asp-action="DiscoverGroups" method="get">
+            <form id="filterformgrid" asp-controller="SportGroup" asp-action="DiscoverGroups">
                 <h3>Filter</h3>
                 <div class="text-right vcenter">
                     <span id="resetbutton">Zurücksetzen</span>
@@ -35,7 +35,7 @@
                     {
                         <div>
                             <input type="checkbox" name="ActivityCategories" value="@activityTag.ActivityCategory" checked="@checkedActivities.Contains(activityTag.ActivityCategory)" />
-                            <img src="@activityTag.IconUrl" />
+                            <img src="@activityTag.IconUrl" title="@activityTag.ActivityCategory"/>
                         </div>
                     }
                 </div>
@@ -46,7 +46,7 @@
                     {
                         <div>
                             <input type="checkbox" name="GenderRestrictions" value="@genderRestrictionTag.GenderRestriction" checked="@checkedGenderRestrictions.Contains(genderRestrictionTag.GenderRestriction)" />
-                            <img src="@genderRestrictionTag.IconUrl" />
+                            <img src="@genderRestrictionTag.IconUrl" title="@genderRestrictionTag.GenderRestriction"/>
                         </div>
                     }
                 </div>
@@ -145,17 +145,17 @@
                                 @{
                                     foreach (var activityTag in sportGroup.ActivityTags)
                                     {
-                                        <img class="tagicon" src="@activityTag.IconUrl" />
+                                        <img class="tagicon" src="@activityTag.IconUrl" title="@activityTag.ActivityCategory"/>
                                     }
                                     if (sportGroup.GenderRestrictionTag != null)
                                     {
-                                        <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" />
+                                        <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" title="@sportGroup.GenderRestrictionTag.GenderRestriction"/>
                                     }
                                 }
                             </td>
 
                             <td class="centerText">
-                                <img class="mapicon" src="/icons/placeholder.png" />
+                                <img class="mapicon" src="/icons/maps-icon.png" />
                             </td>
 
                             <td class="centerText">

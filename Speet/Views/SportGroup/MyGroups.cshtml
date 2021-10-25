@@ -47,11 +47,11 @@
                         @{
                             foreach (var activityTag in sportGroup.ActivityTags)
                             {
-                                <img class="tagicon" src="@activityTag.IconUrl" />
+                                <img class="tagicon" src="@activityTag.IconUrl" title="@activityTag.ActivityCategory"/>
                             }
                             if (sportGroup.GenderRestrictionTag != null)
                             {
-                                <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" />
+                                <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" title="@sportGroup.GenderRestrictionTag.GenderRestriction"/>
                             }
                         }
                     </td>

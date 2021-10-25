@@ -20,7 +20,7 @@ namespace Speet.Models
 
     public enum GenderRestrictionType
     {
-        None,
+        NoRestriction,
         MaleOnly,
         FemaleOnly,
         OtherOnly

@@ -16,7 +16,7 @@
         action = "AddGroup";
         groupName = string.Empty;
         checkedActivities = Enumerable.Empty<ActivityCategoryType>().ToList();
-        checkedGenderRestriction = GenderRestrictionType.None;
+        checkedGenderRestriction = GenderRestrictionType.NoRestriction;
         minParticipants = ApplicationConstants.MinSportGroupParticipants;
         maxParticipants = ApplicationConstants.MaxSportGroupParticipants;
         meetupDateTime = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
@@ -42,7 +42,7 @@
 <link rel="stylesheet" href="~/css/createeditgroup.css" />
 
 <div class="viewcontainer">
-    <form class="propertiesformgrid" asp-controller="SportGroup" asp-action="@action" method="post">
+    <form class="propertiesformgrid" asp-controller="SportGroup" asp-action="@action">
         <h3 class="propertiesheading">Eigenschaften</h3>
 
         <b>Gruppenname</b>
@@ -56,7 +56,7 @@
             {
                 <div>
                     <input type="checkbox" name="ActivityCategories" value="@activityTag.ActivityCategory" checked="@checkedActivities.Contains(activityTag.ActivityCategory)" />
-                    <img src="@activityTag.IconUrl" />
+                    <img src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
                 </div>
             }
         </div>
@@ -67,7 +67,7 @@
             {
                 <div>
                     <input type="radio" name="GenderRestriction" value="@genderRestrictionTag.GenderRestriction" checked="@(checkedGenderRestriction == genderRestrictionTag.GenderRestriction)" />
-                    <img src="@genderRestrictionTag.IconUrl" />
+                    <img src="@genderRestrictionTag.IconUrl" title="@genderRestrictionTag.GenderRestriction" />
                 </div>
             }
         </div>

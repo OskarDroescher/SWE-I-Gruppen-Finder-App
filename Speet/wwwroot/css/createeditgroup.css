@@ -30,7 +30,7 @@
     .activitygrid img {
         display: block;
         margin: auto auto;
-        width: 30px;
+        margin-top: 5px;
         height: 30px;
     }
 
@@ -47,7 +47,7 @@
     .gendergrid img {
         display: block;
         margin: auto auto;
-        width: 30px;
+        margin-top: 5px;
         height: 30px;
     }
 
