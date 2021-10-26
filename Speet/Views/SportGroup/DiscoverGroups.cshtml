@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="~/css/discovergroups.css" />
 
     <div class="viewcontainer">
+        <div id="pageindex" class="hidden">@Model.PaginationInfo.CurrentPageIndex</div>
         <div class="filtercontainer">
             <form id="filterformgrid" asp-controller="SportGroup" asp-action="DiscoverGroups">
                 <h3>Filter</h3>
@@ -88,7 +89,6 @@
         </div>
 
         <div class="mapcontainer" id="map">
-            @*insert map here*@
             <script>
                 function initMap() {
                     const myLatLng = { lat: -25.363, lng: 131.044 };
@@ -134,7 +134,8 @@
                     {
                         <tr class="tablerow">
                             <td class="firsttablecolumn">
-                                <span>@sportGroup.GroupName</span>
+                                <div id="groupid" class="hidden">@sportGroup.Id</div>
+                                <span id="groupname">@sportGroup.GroupName</span>
                             </td>
 
                             <td class="centerText">

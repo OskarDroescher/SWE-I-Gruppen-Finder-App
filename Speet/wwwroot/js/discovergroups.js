@@ -67,3 +67,22 @@ function resetFilterAndSubmit() {
     maxdatecalender.value = '';
     submitbutton.click();
 }
+
+//Confirm join and call controller
+var joinbuttons = document.getElementsByClassName('joinbutton');
+for (const button of joinbuttons) {
+    button.addEventListener('click', function () { handleJoinButtonClick(button) })
+}
+
+function handleJoinButtonClick(button) {
+    var tableRow = button.closest(".tablerow");
+    var groupName = tableRow.querySelector('#groupname').innerText;
+    var groupId = tableRow.querySelector('#groupid').innerText;
+
+    if (confirm('Soll der Gruppe "' + groupName + '" wirklich beigetreten werden?')) {
+        $.ajax({
+            url: '/SportGroup/JoinGroup',
+            data: { groupId: groupId },
+        }).done(function () { location.reload(true) });
+    }
+}

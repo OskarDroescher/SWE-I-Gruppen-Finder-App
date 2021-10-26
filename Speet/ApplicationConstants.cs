@@ -2,6 +2,7 @@
 {
     public abstract class ApplicationConstants
     {
+        public const string GoogleIdCookieName = "speet_googleid";
         public const int SportGroupsPerPage = 5;
         public const int MaxShownPreviousPages = 2;
         public const int MaxShownNextPages = 2;

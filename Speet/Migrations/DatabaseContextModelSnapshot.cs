@@ -63,8 +63,9 @@ namespace Speet.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("CreatedByGoogleId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("CreatedByGoogleId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GenderRestrictionTagGenderRestriction")
                         .HasColumnType("TEXT");
@@ -94,9 +95,8 @@ namespace Speet.Migrations
 
             modelBuilder.Entity("Speet.Models.User", b =>
                 {
-                    b.Property<long>("GoogleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("GoogleId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -112,8 +112,8 @@ namespace Speet.Migrations
                     b.Property<long>("JoinedGroupsId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("ParticipantsGoogleId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ParticipantsGoogleId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("JoinedGroupsId", "ParticipantsGoogleId");
 

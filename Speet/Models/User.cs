@@ -6,7 +6,7 @@ namespace Speet.Models
     public class User
     {
         [Key]
-        public long GoogleId { get; set; }
+        public string GoogleId { get; set; }
 
         public GenderType Gender { get; set; }
 

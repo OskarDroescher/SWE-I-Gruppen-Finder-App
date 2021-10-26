@@ -35,8 +35,7 @@ namespace Speet.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    GoogleId = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    GoogleId = table.Column<string>(type: "TEXT", nullable: false),
                     Gender = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -54,7 +53,7 @@ namespace Speet.Migrations
                     Location = table.Column<string>(type: "TEXT", nullable: false),
                     MeetupDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MaxParticipants = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreatedByGoogleId = table.Column<long>(type: "INTEGER", nullable: false),
+                    CreatedByGoogleId = table.Column<string>(type: "TEXT", nullable: false),
                     GenderRestrictionTagGenderRestriction = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -103,7 +102,7 @@ namespace Speet.Migrations
                 columns: table => new
                 {
                     JoinedGroupsId = table.Column<long>(type: "INTEGER", nullable: false),
-                    ParticipantsGoogleId = table.Column<long>(type: "INTEGER", nullable: false)
+                    ParticipantsGoogleId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

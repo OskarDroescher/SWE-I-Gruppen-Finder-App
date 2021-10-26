@@ -11,8 +11,8 @@ namespace Speet.Models
         public PaginationInfo(int pageIndex, int totalNumberOfGroups)
         {
             int totalPages = GetTotalPages(totalNumberOfGroups);
-            CurrentPageIndex = pageIndex;
-            PreviousPageIndexes = GetPreviousPageIndexes(totalPages);
+            CurrentPageIndex = GetCurrentPageIndex(pageIndex, totalPages);
+            PreviousPageIndexes = GetPreviousPageIndexes();
             NextPageIndexes = GetNextPageIndexes(totalPages);
         }
 
@@ -25,7 +25,15 @@ namespace Speet.Models
             return totalPages;
         }
 
-        private int[] GetPreviousPageIndexes(int totalPages)
+        private int GetCurrentPageIndex(int pageIndex, int totalPages)
+        {
+            if (pageIndex < 1)
+                return 1;
+
+            return (pageIndex > totalPages ? totalPages : pageIndex);
+        }
+
+        private int[] GetPreviousPageIndexes()
         {
             List<int> indexes = new List<int>();
             for (int i = (CurrentPageIndex-ApplicationConstants.MaxShownPreviousPages); i < CurrentPageIndex; i++)

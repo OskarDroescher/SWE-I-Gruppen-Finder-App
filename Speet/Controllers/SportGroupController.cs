@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Speet.Models;
 using Speet.Models.ContainerModels;
 using Speet.Models.HttpRequestModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,11 +21,13 @@ namespace Speet.Controllers
 
         public IActionResult DiscoverGroups(FilterSettingsRequest filterSettings, int pageIndex = 1)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Start");
+            User user = GetUserFromRequest();
+            if(user == null)
+                return RedirectToAction("Start", "Site");
 
-            List<SportGroup> filteredGroups = GetFilteredSportGroups(filterSettings);
-            List<SportGroup> groupsOnPage = GetSportGroupsOnPage(pageIndex, filteredGroups);
+            List<SportGroup> filteredGroups = GetFilteredSportGroups(user, filterSettings);
+            PaginationInfo paginationInfo = new PaginationInfo(pageIndex, filteredGroups.Count);
+            List<SportGroup> groupsOnPage = GetSportGroupsOnPage(paginationInfo, filteredGroups);
 
             DiscoverGroupsContainer viewContainer = new DiscoverGroupsContainer()
             {
@@ -32,20 +35,15 @@ namespace Speet.Controllers
                 FilterSettings = filterSettings,
                 AllActivityTags = _db.ActivityTag.AsNoTracking().ToList(),
                 AllGenderRestrictionTags = _db.GenderRestrictionTag.AsNoTracking().ToList(),
-                PaginationInfo = new PaginationInfo(pageIndex, filteredGroups.Count)
+                PaginationInfo = paginationInfo
             };
             
             return View(viewContainer); 
         }
 
-        public IActionResult Start()
+        private List<SportGroup> GetFilteredSportGroups(User user, FilterSettingsRequest filterSettings)
         {
-            return View();
-        }
-
-        private List<SportGroup> GetFilteredSportGroups(FilterSettingsRequest filterSettings)
-        {
-            var groupsToDisplayQuery = _db.SportGroup.AsQueryable();
+            var groupsToDisplayQuery = _db.SportGroup.Where(sg => !sg.Participants.Contains(user));
 
             if (filterSettings.ActivityCategories.Count > 0)
                 groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => sg.ActivityTags.Any(at => filterSettings.ActivityCategories.Contains(at.ActivityCategory)));
@@ -61,27 +59,32 @@ namespace Speet.Controllers
 
             groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => sg.MaxParticipants <= filterSettings.MaxParticipants);
 
+            //filter out full groups
+            groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => sg.MaxParticipants > sg.Participants.Count);
+
             return groupsToDisplayQuery.ToList();
         }
 
-        private List<SportGroup> GetSportGroupsOnPage(int pageIndex, List<SportGroup> groups)
+        private List<SportGroup> GetSportGroupsOnPage(PaginationInfo paginationInfo, List<SportGroup> groups)
         {
-            int firstGroupOnPageIndex = (pageIndex * ApplicationConstants.SportGroupsPerPage - ApplicationConstants.SportGroupsPerPage);
+            int firstGroupOnPageIndex = (paginationInfo.CurrentPageIndex * ApplicationConstants.SportGroupsPerPage - ApplicationConstants.SportGroupsPerPage);
             return groups.Skip(firstGroupOnPageIndex).Take(ApplicationConstants.SportGroupsPerPage).ToList();
         }
 
         public IActionResult MyGroups(int pageindex = 1)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Start");
+            User user = GetUserFromRequest();
+            if (user == null)
+                return RedirectToAction("Start", "Site");
 
-            User user = GetTestUser();
-            List<SportGroup> groupsOnPage = GetSportGroupsOnPage(pageindex, user.JoinedGroups.ToList());
+            List<SportGroup> joinedGroups = user.JoinedGroups.ToList();
+            PaginationInfo paginationInfo = new PaginationInfo(pageindex, joinedGroups.Count);
+            List<SportGroup> groupsOnPage = GetSportGroupsOnPage(paginationInfo, joinedGroups);
             MyGroupsContainer viewContainer = new MyGroupsContainer()
             {
                 GroupsToDisplay = groupsOnPage,
                 UserToDisplay = user,
-                PaginationInfo = new PaginationInfo(pageindex, user.JoinedGroups.Count)
+                PaginationInfo = paginationInfo
             };
 
             return View(viewContainer);
@@ -89,8 +92,9 @@ namespace Speet.Controllers
 
         public IActionResult CreateGroup()
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Start");
+            User user = GetUserFromRequest();
+            if (user == null)
+                return RedirectToAction("Start", "Site");
 
             CreateEditGroupContainer viewContainer = new CreateEditGroupContainer()
             {
@@ -104,8 +108,9 @@ namespace Speet.Controllers
 
         public IActionResult EditGroup(long groupId)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Start");
+            User user = GetUserFromRequest();
+            if (user == null)
+                return RedirectToAction("Start", "Site");
 
             SportGroup groupToEdit = _db.SportGroup.Find(groupId);
             if(groupToEdit == null)
@@ -123,10 +128,10 @@ namespace Speet.Controllers
 
         public IActionResult AddGroup(AddEditGroupRequest request)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Start");
+            User groupCreator = GetUserFromRequest();
+            if (groupCreator == null)
+                return RedirectToAction("Start", "Site");
 
-            User groupCreator = GetTestUser();
             SportGroup newGroup = new SportGroup()
             {
                 GroupName = request.GroupName,
@@ -147,34 +152,67 @@ namespace Speet.Controllers
 
         public IActionResult UpdateGroup(AddEditGroupRequest request, long groupId)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Start");
+            User user = GetUserFromRequest();
+            if (user == null)
+                return RedirectToAction("Start", "Site");
 
-            SportGroup groupToEdit = _db.SportGroup.Find(groupId);
-            if (groupToEdit == null)
+            SportGroup groupToUpdate = _db.SportGroup.Find(groupId);
+            if (groupToUpdate == null)
                 return new EmptyResult();
 
-            groupToEdit.GroupName = request.GroupName;
-            groupToEdit.Location = "Not implemented yet";
-            groupToEdit.MeetupDate = request.MeetupDate;
-            groupToEdit.MaxParticipants = request.MaxParticipants;
-            groupToEdit.GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction);
+            groupToUpdate.GroupName = request.GroupName;
+            groupToUpdate.Location = "Not implemented yet";
+            groupToUpdate.MeetupDate = request.MeetupDate;
+            groupToUpdate.MaxParticipants = request.MaxParticipants;
+            groupToUpdate.GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction);
 
             //Warning: overwriting the groupToEdit.ActivityTags reference directly could throw an exception, thats why the list is just refilled
-            groupToEdit.ActivityTags.Clear();
+            groupToUpdate.ActivityTags.Clear();
             List<ActivityTag> requestedActivityTags = request.ActivityCategories.Select(ac => _db.ActivityTag.Find(ac)).ToList();
-            requestedActivityTags.ForEach(at => groupToEdit.ActivityTags.Add(at));
+            requestedActivityTags.ForEach(at => groupToUpdate.ActivityTags.Add(at));
 
             _db.SaveChanges();
 
             return Redirect("MyGroups");
         }
 
-        [HttpDelete]
+        public IActionResult JoinGroup(long groupId)
+        {
+            User user = GetUserFromRequest();
+            if (user == null)
+                return RedirectToAction("Start", "Site");
+
+            SportGroup groupToJoin = _db.SportGroup.Find(groupId);
+            if (groupToJoin == null)
+                return Json(new { success = false });
+
+            groupToJoin.Participants.Add(user);
+            _db.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
+        public IActionResult LeaveGroup(long groupId)
+        {
+            User user = GetUserFromRequest();
+            if (user == null)
+                return RedirectToAction("Start", "Site");
+
+            SportGroup groupToLeave = _db.SportGroup.Find(groupId);
+            if (groupToLeave == null)
+                return Json(new { success = false });
+
+            groupToLeave.Participants.Remove(user);
+            _db.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
         public IActionResult DeleteGroup(long groupId)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Start");
+            User user = GetUserFromRequest();
+            if (user == null)
+                return RedirectToAction("Start", "Site");
 
             SportGroup groupToDelete = _db.SportGroup.Find(groupId);
             if (groupToDelete == null)
@@ -186,22 +224,77 @@ namespace Speet.Controllers
             return Json(new { success = true });
         }
 
-        private User GetTestUser()
+        private User GetUserFromRequest()
         {
-            User testUser = _db.User.Find((long)1);
-            if(testUser == null)
+            string googleId = Request.Cookies[ApplicationConstants.GoogleIdCookieName];
+            return _db.User.Find(googleId);
+        }
+
+        private void CreateTestGroup()
+        {
+            User user = _db.User.Find("2");
+
+            SportGroup group = new SportGroup()
             {
-                testUser = new User()
-                {
-                    GoogleId = 1,
-                    Gender = GenderType.Male,
-                };
+                GroupName = "TestGroup",
+                CreatedBy = user,
+                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
+                Location = "Berlin",
+                MeetupDate = DateTime.Now
+            };
 
-                _db.User.Add(testUser);
-                _db.SaveChanges();
-            }
+            SportGroup group2 = new SportGroup()
+            {
+                GroupName = "TestGroup",
+                CreatedBy = user,
+                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
+                Location = "Berlin",
+                MeetupDate = DateTime.Now
+            };
 
-            return testUser;
+            SportGroup group3 = new SportGroup()
+            {
+                GroupName = "TestGroup",
+                CreatedBy = user,
+                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
+                Location = "Berlin",
+                MeetupDate = DateTime.Now
+            };
+
+            SportGroup group4 = new SportGroup()
+            {
+                GroupName = "TestGroup",
+                CreatedBy = user,
+                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
+                Location = "Berlin",
+                MeetupDate = DateTime.Now
+            };
+
+            SportGroup group5 = new SportGroup()
+            {
+                GroupName = "TestGroup",
+                CreatedBy = user,
+                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
+                Location = "Berlin",
+                MeetupDate = DateTime.Now
+            };
+
+            SportGroup group6 = new SportGroup()
+            {
+                GroupName = "TestGroup",
+                CreatedBy = user,
+                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
+                Location = "Berlin",
+                MeetupDate = DateTime.Now
+            };
+
+            _db.SportGroup.Add(group);
+            _db.SportGroup.Add(group2);
+            _db.SportGroup.Add(group3);
+            _db.SportGroup.Add(group4);
+            _db.SportGroup.Add(group5);
+            _db.SportGroup.Add(group6);
+            _db.SaveChanges();
         }
     }
 }

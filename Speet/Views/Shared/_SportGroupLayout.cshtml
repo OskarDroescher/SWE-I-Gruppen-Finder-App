@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html class="use-all-space" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Speet</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/general.css" />
+    <link rel="stylesheet" href="~/css/sportgrouplayout.css" />
+</head>
+<body class="masterbody use-all-space">
+    <header>
+        <nav class="topnavbar">
+            <input id="sidebarbutton" class="topnavbaritem" type="image" src="~/icons/menu-icon.png" />
+            <img id="topnavlogo" class="topnavbaritem" src="~/icons/speet-logo.png" />
+            <p id="topnavtitle" class="topnavbaritem">@ViewData["Title"]</p>
+            <partial name="_LoginPartial" />
+        </nav>
+    </header>
+
+    <div class="sidenavbar">
+        <ul>
+            <li>
+                <a asp-controller="SportGroup" asp-action="DiscoverGroups">Gruppe suchen</a>
+            </li>
+            <li>
+                <a asp-controller="SportGroup" asp-action="MyGroups">Meine Gruppen</a>
+            </li>
+            <li>
+                <a asp-controller="SportGroup" asp-action="CreateGroup">Gruppe erstellen</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="use-all-space">
+        <main class="use-all-space" role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    @*uncomment when implemented
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2021 - Speet - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>*@
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/navbar.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

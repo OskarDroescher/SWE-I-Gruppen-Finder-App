@@ -47,6 +47,8 @@
     height: 50px;
 }
 
+.leavebutton {}
+
 /*Pagination*/
 .paginationcontainer {
     display: inline-block;

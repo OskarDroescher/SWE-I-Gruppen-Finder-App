@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="~/css/mygroups.css" />
 
 
-@if (Model.UserToDisplay.CreatedGroups.Count > 0)
+@if (Model.UserToDisplay.CreatedGroups.Count > 0 || Model.UserToDisplay.JoinedGroups.Count > 0)
 {
     <div class="viewcontainer">
         <table class="sportgroupstable">
@@ -62,7 +62,7 @@
 
                     <td class="centerText lasttablecolumn">
                         <div class="oneline">
-                            @if (Model.UserToDisplay.GoogleId == sportGroup.CreatedBy.GoogleId)
+                            @if (Model.UserToDisplay.GoogleId.Equals(sportGroup.CreatedBy.GoogleId))
                             {
                                 <input class="primarybutton center tablebutton" type="button" value="Bearbeiten" onclick="location.href='/SportGroup/EditGroup/?groupId=@(sportGroup.Id)'"/>
                                 <input class="dangerbutton center tablebutton" type="button" value="Löschen" /> // See mygroups.js for button logic
@@ -70,7 +70,7 @@
                             else
                             {
                                 <input class="primarybutton center tablebutton" type="button" value="Details" /> // Not implemented yet
-                                <input class="primarybutton center tablebutton" type="button" value="Austreten" /> //Not implemented yet
+                                <input class="leavebutton primarybutton center tablebutton" type="button" value="Austreten"/> //See mygroups.js for button logic
                             }
                         </div>
                     </td>
