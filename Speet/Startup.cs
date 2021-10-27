@@ -28,7 +28,7 @@ namespace Speet
             })
             .AddCookie(options =>
             {
-                options.LoginPath = "/account/google-login"; // Must be lowercase
+                options.LoginPath = "/account/google-login"; // Must be lowercase              
             })
             .AddGoogle(options =>
             {
@@ -41,7 +41,7 @@ namespace Speet
                 options.ClaimActions.MapJsonKey(ClaimTypes.Email, "EmailAddress", ClaimValueTypes.Email);
                 options.ClaimActions.MapJsonKey(ClaimTypes.Name, "Name");
 
-                options.SaveTokens = true;
+                options.SaveTokens = true;                            
 
             });
 

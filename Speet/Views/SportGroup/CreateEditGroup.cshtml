@@ -46,7 +46,7 @@
         <h3 class="propertiesheading">Eigenschaften</h3>
 
         <b>Gruppenname</b>
-        <input type="text" class="textfield" name="GroupName" value="@groupName" maxlength="@ApplicationConstants.MaxGroupNameLength"/>
+        <input type="text" class="textfield" name="GroupName" value="@groupName" maxlength="@ApplicationConstants.MaxGroupNameLength" />
 
         <div>
             <b>Aktivitäten</b>
@@ -91,9 +91,20 @@
 
         <input id="submitbutton" type="submit" class="primarybutton hcenter" value="@submitButtonText" />
     </form>
-    <div>
-        @*insert map here*@
+    <div class="mapcontainer" id="map">
+        <script>
+            function initMap() {
+                const myLatLng = { lat: -25.363, lng: 131.044 };
+                const map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 4,
+                    center: myLatLng,
+                });
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyFncc8DAmnkXS1XPR9IIDcvB7DeCQ84c&callback=initMap&v=weekly"
+                async defer></script>
     </div>
+
 </div>
 
 <script src="~/js/createeditgroup.js" asp-append-version="true"></script>

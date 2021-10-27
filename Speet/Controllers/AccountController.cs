@@ -24,8 +24,8 @@ namespace Speet.Controllers
         [Route("google-login")]
         public IActionResult GoogleLogin()
         {
-            var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+            var properties = new AuthenticationProperties { IsPersistent = true, RedirectUri = Url.Action("GoogleResponse") };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);                    
         }
 
         [Route("Index")]
