@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Speet.Models;
 using Speet.Models.ContainerModels;
 using Speet.Models.HttpRequestModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Speet.Controllers
 {
@@ -21,10 +21,10 @@ namespace Speet.Controllers
 
         public IActionResult DiscoverGroups(FilterSettingsRequest filterSettings, int pageIndex = 1)
         {
-            User user = GetUserFromRequest();
-            if(user == null)
+            if(!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
+            User user = GetUserFromRequest();
             List<SportGroup> filteredGroups = GetFilteredSportGroups(user, filterSettings);
             PaginationInfo paginationInfo = new PaginationInfo(pageIndex, filteredGroups.Count);
             List<SportGroup> groupsOnPage = GetSportGroupsOnPage(paginationInfo, filteredGroups);
@@ -59,7 +59,7 @@ namespace Speet.Controllers
 
             groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => sg.MaxParticipants <= filterSettings.MaxParticipants);
 
-            //filter out full groups
+            //Filter out full groups
             groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => sg.MaxParticipants > sg.Participants.Count);
 
             return groupsToDisplayQuery.ToList();
@@ -73,10 +73,10 @@ namespace Speet.Controllers
 
         public IActionResult MyGroups(int pageindex = 1)
         {
-            User user = GetUserFromRequest();
-            if (user == null)
+            if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
+            User user = GetUserFromRequest();
             List<SportGroup> joinedGroups = user.JoinedGroups.ToList();
             PaginationInfo paginationInfo = new PaginationInfo(pageindex, joinedGroups.Count);
             List<SportGroup> groupsOnPage = GetSportGroupsOnPage(paginationInfo, joinedGroups);
@@ -92,8 +92,7 @@ namespace Speet.Controllers
 
         public IActionResult CreateGroup()
         {
-            User user = GetUserFromRequest();
-            if (user == null)
+            if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
             CreateEditGroupContainer viewContainer = new CreateEditGroupContainer()
@@ -108,12 +107,15 @@ namespace Speet.Controllers
 
         public IActionResult EditGroup(long groupId)
         {
-            User user = GetUserFromRequest();
-            if (user == null)
+            if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
             SportGroup groupToEdit = _db.SportGroup.Find(groupId);
             if(groupToEdit == null)
+                return new EmptyResult();
+
+            User user = GetUserFromRequest();
+            if (user.GoogleId != groupToEdit.CreatedBy.GoogleId)
                 return new EmptyResult();
 
             CreateEditGroupContainer viewContainer = new CreateEditGroupContainer()
@@ -128,10 +130,10 @@ namespace Speet.Controllers
 
         public IActionResult AddGroup(AddEditGroupRequest request)
         {
-            User groupCreator = GetUserFromRequest();
-            if (groupCreator == null)
+            if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
+            User groupCreator = GetUserFromRequest();
             SportGroup newGroup = new SportGroup()
             {
                 GroupName = request.GroupName,
@@ -152,12 +154,15 @@ namespace Speet.Controllers
 
         public IActionResult UpdateGroup(AddEditGroupRequest request, long groupId)
         {
-            User user = GetUserFromRequest();
-            if (user == null)
+            if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
             SportGroup groupToUpdate = _db.SportGroup.Find(groupId);
             if (groupToUpdate == null)
+                return new EmptyResult();
+
+            User user = GetUserFromRequest();
+            if (user.GoogleId != groupToUpdate.CreatedBy.GoogleId)
                 return new EmptyResult();
 
             groupToUpdate.GroupName = request.GroupName;
@@ -178,14 +183,14 @@ namespace Speet.Controllers
 
         public IActionResult JoinGroup(long groupId)
         {
-            User user = GetUserFromRequest();
-            if (user == null)
+            if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
             SportGroup groupToJoin = _db.SportGroup.Find(groupId);
             if (groupToJoin == null)
                 return Json(new { success = false });
 
+            User user = GetUserFromRequest();
             groupToJoin.Participants.Add(user);
             _db.SaveChanges();
 
@@ -194,14 +199,14 @@ namespace Speet.Controllers
 
         public IActionResult LeaveGroup(long groupId)
         {
-            User user = GetUserFromRequest();
-            if (user == null)
+            if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
             SportGroup groupToLeave = _db.SportGroup.Find(groupId);
             if (groupToLeave == null)
                 return Json(new { success = false });
 
+            User user = GetUserFromRequest();
             groupToLeave.Participants.Remove(user);
             _db.SaveChanges();
 
@@ -210,12 +215,15 @@ namespace Speet.Controllers
 
         public IActionResult DeleteGroup(long groupId)
         {
-            User user = GetUserFromRequest();
-            if (user == null)
+            if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
             SportGroup groupToDelete = _db.SportGroup.Find(groupId);
             if (groupToDelete == null)
+                return Json(new { success = false });
+
+            User user = GetUserFromRequest();
+            if (user.GoogleId != groupToDelete.CreatedBy.GoogleId)
                 return Json(new { success = false });
 
             _db.SportGroup.Remove(groupToDelete);
@@ -226,75 +234,8 @@ namespace Speet.Controllers
 
         private User GetUserFromRequest()
         {
-            string googleId = Request.Cookies[ApplicationConstants.GoogleIdCookieName];
+            string googleId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             return _db.User.Find(googleId);
-        }
-
-        private void CreateTestGroup()
-        {
-            User user = _db.User.Find("2");
-
-            SportGroup group = new SportGroup()
-            {
-                GroupName = "TestGroup",
-                CreatedBy = user,
-                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
-                Location = "Berlin",
-                MeetupDate = DateTime.Now
-            };
-
-            SportGroup group2 = new SportGroup()
-            {
-                GroupName = "TestGroup",
-                CreatedBy = user,
-                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
-                Location = "Berlin",
-                MeetupDate = DateTime.Now
-            };
-
-            SportGroup group3 = new SportGroup()
-            {
-                GroupName = "TestGroup",
-                CreatedBy = user,
-                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
-                Location = "Berlin",
-                MeetupDate = DateTime.Now
-            };
-
-            SportGroup group4 = new SportGroup()
-            {
-                GroupName = "TestGroup",
-                CreatedBy = user,
-                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
-                Location = "Berlin",
-                MeetupDate = DateTime.Now
-            };
-
-            SportGroup group5 = new SportGroup()
-            {
-                GroupName = "TestGroup",
-                CreatedBy = user,
-                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
-                Location = "Berlin",
-                MeetupDate = DateTime.Now
-            };
-
-            SportGroup group6 = new SportGroup()
-            {
-                GroupName = "TestGroup",
-                CreatedBy = user,
-                MaxParticipants = ApplicationConstants.MaxSportGroupParticipants,
-                Location = "Berlin",
-                MeetupDate = DateTime.Now
-            };
-
-            _db.SportGroup.Add(group);
-            _db.SportGroup.Add(group2);
-            _db.SportGroup.Add(group3);
-            _db.SportGroup.Add(group4);
-            _db.SportGroup.Add(group5);
-            _db.SportGroup.Add(group6);
-            _db.SaveChanges();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@{
-    if(Context.Request.Path.Value == "/Site/Start")
+    if(Context.Request.Path.Value.Contains("/Site/Start"))
         Layout = "_StartLayout";
     else
         Layout = "_SportGroupLayout";

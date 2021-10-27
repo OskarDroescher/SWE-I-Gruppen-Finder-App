@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Speet.Models;
-using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -35,14 +34,6 @@ namespace Speet.Controllers
             if (_db.User.Find(googleId) == null)
                 CreateUser(googleId);
 
-            Response.Cookies.Append(ApplicationConstants.GoogleIdCookieName, googleId, new CookieOptions()
-            {
-                Expires = DateTimeOffset.MaxValue,
-                Path = "/",
-                HttpOnly = true,
-                Secure = true,
-            });
-
             return RedirectToAction("DiscoverGroups", "SportGroup");
         }
 
@@ -62,7 +53,6 @@ namespace Speet.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            Response.Cookies.Delete(ApplicationConstants.GoogleIdCookieName);
             return new RedirectResult(url: "/Site/Start", permanent: true, preserveMethod: true);
         }
     }
