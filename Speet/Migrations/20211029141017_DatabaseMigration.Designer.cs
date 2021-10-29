@@ -9,7 +9,7 @@ using Speet.Models;
 namespace Speet.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211026121607_DatabaseMigration")]
+    [Migration("20211029141017_DatabaseMigration")]
     partial class DatabaseMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,7 @@ namespace Speet.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IconUrl")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ActivityCategory");
@@ -52,6 +53,7 @@ namespace Speet.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IconUrl")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("GenderRestriction");
@@ -100,7 +102,14 @@ namespace Speet.Migrations
                     b.Property<string>("GoogleId")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("Birthday")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

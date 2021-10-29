@@ -37,6 +37,7 @@ namespace Speet.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IconUrl")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ActivityCategory");
@@ -50,6 +51,7 @@ namespace Speet.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IconUrl")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("GenderRestriction");
@@ -98,7 +100,14 @@ namespace Speet.Migrations
                     b.Property<string>("GoogleId")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("Birthday")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Speet.Models;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -42,6 +43,8 @@ namespace Speet.Controllers
             User newUser = new User()
             {
                 GoogleId = userId,
+                Username = User.Identity.Name,
+                Birthday = DateTime.Now, //Set birthday from claim logic here
                 Gender = GenderType.Male //Set gender from claim logic here
             };
 

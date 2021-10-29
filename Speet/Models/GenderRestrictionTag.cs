@@ -8,6 +8,7 @@ namespace Speet.Models
         [Key]
         public GenderRestrictionType GenderRestriction { get; set; }
 
+        [Required]
         public string IconUrl { get; set; }
 
         public virtual ICollection<SportGroup> AssignedGroups { get; set; }

@@ -133,12 +133,15 @@ namespace Speet.Controllers
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
+            if (!IsGroupValid(request))
+                return new EmptyResult();
+
             User groupCreator = GetUserFromRequest();
             SportGroup newGroup = new SportGroup()
             {
                 GroupName = request.GroupName,
                 Location = "Not implemented yet",
-                MeetupDate = request.MeetupDate,
+                MeetupDate = request.MeetupDate.Value,
                 MaxParticipants = request.MaxParticipants,
                 CreatedBy = groupCreator,
                 ActivityTags = _db.ActivityTag.Where(at => request.ActivityCategories.Contains(at.ActivityCategory)).ToList(),
@@ -152,10 +155,18 @@ namespace Speet.Controllers
             return Redirect("CreateGroup");
         }
 
+        private bool IsGroupValid(AddEditGroupRequest request)
+        {
+            return (request.GroupName.Length > 0 && request.ActivityCategories.Count > 0 && request.MeetupDate.HasValue);
+        }
+
         public IActionResult UpdateGroup(AddEditGroupRequest request, long groupId)
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
+
+            if (!IsGroupValid(request))
+                return new EmptyResult();
 
             SportGroup groupToUpdate = _db.SportGroup.Find(groupId);
             if (groupToUpdate == null)
@@ -167,7 +178,7 @@ namespace Speet.Controllers
 
             groupToUpdate.GroupName = request.GroupName;
             groupToUpdate.Location = "Not implemented yet";
-            groupToUpdate.MeetupDate = request.MeetupDate;
+            groupToUpdate.MeetupDate = request.MeetupDate.Value;
             groupToUpdate.MaxParticipants = request.MaxParticipants;
             groupToUpdate.GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction);
 

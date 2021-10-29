@@ -45,11 +45,11 @@
     <form class="propertiesformgrid" asp-controller="SportGroup" asp-action="@action">
         <h3 class="propertiesheading">Eigenschaften</h3>
 
-        <b>Gruppenname</b>
-        <input type="text" class="textfield" name="GroupName" value="@groupName" maxlength="@ApplicationConstants.MaxGroupNameLength" />
+        <b id="groupnameheading">Gruppenname</b>
+        <input id="groupname" type="text" class="textfield" name="GroupName" value="@groupName" maxlength="@ApplicationConstants.MaxGroupNameLength" />
 
         <div>
-            <b>Aktivitäten</b>
+            <b id="activityheading">Aktivitäten</b>
         </div>
         <div class="activitygrid">
             @foreach (var activityTag in Model.AllActivityTags)
@@ -81,7 +81,7 @@
             </div>
         </div>
 
-        <b>Datum und Zeit</b>
+        <b id="meetuptimeheading">Datum und Zeit</b>
         <input id="datetimecalender" type="datetime-local" class="hcenter" name="MeetupDate" value="@meetupDateTime" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
 
         @if (Model.SportGroupToEdit != null)
@@ -90,6 +90,7 @@
         }
 
         <input id="submitbutton" type="submit" class="primarybutton hcenter" value="@submitButtonText" />
+
     </form>
     <div class="mapcontainer" id="map">
         <script>

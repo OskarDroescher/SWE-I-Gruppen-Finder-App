@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Speet.Models
@@ -8,6 +9,13 @@ namespace Speet.Models
         [Key]
         public string GoogleId { get; set; }
 
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public DateTime? Birthday { get; set; }
+
+        [Required]
         public GenderType Gender { get; set; }
 
         public virtual ICollection<SportGroup> CreatedGroups { get; set; }

@@ -12,7 +12,7 @@ namespace Speet.Migrations
                 columns: table => new
                 {
                     ActivityCategory = table.Column<string>(type: "TEXT", nullable: false),
-                    IconUrl = table.Column<string>(type: "TEXT", nullable: true)
+                    IconUrl = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -24,7 +24,7 @@ namespace Speet.Migrations
                 columns: table => new
                 {
                     GenderRestriction = table.Column<string>(type: "TEXT", nullable: false),
-                    IconUrl = table.Column<string>(type: "TEXT", nullable: true)
+                    IconUrl = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,6 +36,8 @@ namespace Speet.Migrations
                 columns: table => new
                 {
                     GoogleId = table.Column<string>(type: "TEXT", nullable: false),
+                    Username = table.Column<string>(type: "TEXT", nullable: false),
+                    Birthday = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Gender = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
