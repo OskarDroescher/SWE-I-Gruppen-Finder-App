@@ -11939,6 +11939,7 @@ p {
         font-size: 2.5rem;
         margin-top: 0;
         margin-bottom: 1rem;
+
     }
 
     .page-section h3.section-subheading, .page-section .section-subheading.h3 {
@@ -12083,7 +12084,7 @@ header.masthead {
             margin-left: 0;
             text-align: center;
             color: white;
-            border: 7px solid #e9ecef;
+            border: 7px solid rgb(255, 214, 10);
             border-radius: 100%;
             background-color: #ffc800;
         }
