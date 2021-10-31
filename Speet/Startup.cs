@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Speet.Models;
+using Google.Apis.PeopleService.v1;
+using Google.Apis.PeopleService;
+using System.Linq;
+using Google.Apis.PeopleService.v1.Data;
+using Google.Apis.Services;
+using Google.Apis.Auth.OAuth2;
+using System.IO;
+using System.Threading;
+using Google.Apis.Util.Store;
 
 namespace Speet
 {
@@ -36,12 +46,19 @@ namespace Speet
 
                 options.ClientId = googleAuthNSection["ClientId"];
                 options.ClientSecret = googleAuthNSection["ClientSecret"];
-                              
+
+                options.Scope.Add("https://www.googleapis.com/auth/user.gender.read");
+                options.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
+                options.Scope.Add("profile");
+
                 options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "UserId");
                 options.ClaimActions.MapJsonKey(ClaimTypes.Email, "EmailAddress", ClaimValueTypes.Email);
                 options.ClaimActions.MapJsonKey(ClaimTypes.Name, "Name");
+                options.ClaimActions.MapJsonKey(ClaimTypes.Gender, "Gender");
+                options.ClaimActions.MapJsonKey(ClaimTypes.DateOfBirth, "Birthday");
+                options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
 
-                options.SaveTokens = true;                            
+                options.SaveTokens = true;
 
             });
 

@@ -26,6 +26,23 @@
     vertical-align: middle;
 }
 
+.topnavbaritem-right {
+    padding-top: 5px;
+    margin-right: 10px;
+    margin-left: 10px;
+    display: block;
+    float: right;
+    vertical-align: middle;
+    font-size: 18px;
+    font-weight:bold;
+}
+
+.avatar {
+    width: 40px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
 #topnavlogo {
     padding: 5px 0;
     margin: 0 0 0 30px;

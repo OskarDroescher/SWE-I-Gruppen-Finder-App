@@ -1,14 +1,14 @@
 ﻿
-<ul class="navbar-nav d-sm-inline-flex flex-sm-row-reverse">
+<ul class="topnavbaritem-right navbar-nav flex-sm-row-reverse d-sm-inline-flex">
     @if (User.Identity.IsAuthenticated)
     {
-    <li class="nav-item">
-        <a class="topnavbaritem" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+    <li class="form-inline">
+        <img src="@User.FindFirst("urn:google:picture")?.Value" alt="avatar" class="rounded-circle avatar" />
+        <p>@User.FindFirst("Gender")?.Value</p>
+        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
     </li>
-        <li class="nav-item">
-            <form class="form-inline">
-                <a class="topnavbaritem" asp-controller="Account" asp-action="Logout">Logout</a>
-            </form>
+        <li class="form-inline">
+                <a asp-controller="Account" asp-action="Logout">Logout</a>
         </li>
     }
     else
