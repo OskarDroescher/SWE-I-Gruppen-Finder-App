@@ -26,8 +26,9 @@ namespace Speet.Controllers
 
             User user = GetUserFromRequest();
             List<SportGroup> filteredGroups = GetFilteredSportGroups(user, filterSettings);
-            PaginationInfo paginationInfo = new PaginationInfo(pageIndex, filteredGroups.Count);
-            List<SportGroup> groupsOnPage = GetSportGroupsOnPage(paginationInfo, filteredGroups);
+            List<SportGroup> sortedGroups = filteredGroups.OrderBy(sg => sg.MeetupDate).ToList();
+            PaginationInfo paginationInfo = new PaginationInfo(pageIndex, sortedGroups.Count);
+            List<SportGroup> groupsOnPage = GetSportGroupsOnPage(paginationInfo, sortedGroups);
 
             DiscoverGroupsContainer viewContainer = new DiscoverGroupsContainer()
             {
@@ -77,7 +78,7 @@ namespace Speet.Controllers
                 return RedirectToAction("Start", "Site");
 
             User user = GetUserFromRequest();
-            List<SportGroup> joinedGroups = user.JoinedGroups.ToList();
+            List<SportGroup> joinedGroups = user.JoinedGroups.OrderBy(sg => sg.MeetupDate).ToList();
             PaginationInfo paginationInfo = new PaginationInfo(pageindex, joinedGroups.Count);
             List<SportGroup> groupsOnPage = GetSportGroupsOnPage(paginationInfo, joinedGroups);
             MyGroupsContainer viewContainer = new MyGroupsContainer()
@@ -144,7 +145,7 @@ namespace Speet.Controllers
                 MeetupDate = request.MeetupDate.Value,
                 MaxParticipants = request.MaxParticipants,
                 CreatedBy = groupCreator,
-                ActivityTags = _db.ActivityTag.Where(at => request.ActivityCategories.Contains(at.ActivityCategory)).ToList(),
+                ActivityTags = _db.ActivityTag.Where(at => request.ActivityCategories.Contains(at.ActivityCategory)).ToHashSet(),
                 GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction)
             };
             newGroup.Participants.Add(groupCreator);
