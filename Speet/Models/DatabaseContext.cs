@@ -1,10 +1,59 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading;
 
 namespace Speet.Models
 {
     public class DatabaseContext : DbContext
     {
+        private static Timer _cleanUpTimer;
+
+        static DatabaseContext()
+        {
+            SetUpCleanUpTimer();
+        }
+
+        private static void SetUpCleanUpTimer()
+        {
+            int[] dailyTimeParts = ApplicationConstants.DatabaseCleanUpTime.Split(':').Select(p => int.Parse(p)).ToArray();
+            TimeSpan dailyTimeSpan = new TimeSpan(dailyTimeParts[0], dailyTimeParts[1], dailyTimeParts[2]);
+
+            int oneDayPeriod = (int)new TimeSpan(24, 0, 0).TotalMilliseconds;
+            int dailyTime = (int)dailyTimeSpan.TotalMilliseconds;
+            int currentTime = (int)DateTime.Now.TimeOfDay.TotalMilliseconds;
+
+            int dueTime;
+            if (dailyTime > currentTime)
+                dueTime = dailyTime - currentTime;
+            else
+                dueTime = oneDayPeriod - currentTime + dailyTime;
+
+            _cleanUpTimer = new Timer(
+                callback: CleanUpExpiredGroups,
+                state: null,
+                dueTime: dueTime,
+                period: oneDayPeriod);
+        }
+
+        private static void CleanUpExpiredGroups(object timerState)
+        {
+            using (DatabaseContext databaseContext = new DatabaseContext())
+            {
+                DateTime expiredDate = DateTime.Now.AddDays(-ApplicationConstants.SportGroupsExpirationDays);
+
+                foreach (var group in databaseContext.SportGroup)
+                    if (group.MeetupDate.CompareTo(expiredDate) < 0)
+                        databaseContext.SportGroup.Remove(group);
+            }
+        }
+
+        private DatabaseContext()
+        {
+            //Necessary for instantiating local database context for CleanUpExpiredGroups()
+        }
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
             //Necessary for passing options to base class

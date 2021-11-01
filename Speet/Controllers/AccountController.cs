@@ -2,9 +2,7 @@
 using Google.Apis.PeopleService.v1;
 using Google.Apis.PeopleService.v1.Data;
 using Google.Apis.Services;
-using Google.Apis.Util.Store;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Speet.Models;
 using System;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -23,8 +20,8 @@ namespace Speet.Controllers
     [AllowAnonymous, Route("account")]
     public class AccountController : Controller
     {
-        private readonly IConfiguration _config;
         private readonly DatabaseContext _db;
+        public IConfiguration Configuration { get; }
 
         static string[] Scopes = {
                 "profile",
@@ -38,8 +35,6 @@ namespace Speet.Controllers
             Configuration = configuration;      
         }
 
-        public IConfiguration Configuration { get; }
-
         [Route("google-login")]
         public IActionResult GoogleLogin()
         {
@@ -51,7 +46,7 @@ namespace Speet.Controllers
         public IActionResult GoogleResponse()
         {
             string googleId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (_db.User.Find(googleId) == null)
+            if (_db.User.Find(googleId) != null)
                 CreateUser(googleId);
 
             return RedirectToAction("DiscoverGroups", "SportGroup");
@@ -59,39 +54,29 @@ namespace Speet.Controllers
 
         private void CreateUser(string userId)
         {
-            Person UserInfo = GetProfile();
+            Person UserInfo = GetGoogleProfile();
 
             User newUser = new User()
             {
                 GoogleId = userId,
                 Username = User.Identity.Name,
-                Birthday = BirthdayConvert(UserInfo), //DateTime.Now, //Set birthday from claim logic here
-                Gender = GenderConvert(UserInfo) //GenderType.Male  //Set gender from claim logic here
+                Birthday = GetBirthday(UserInfo),
+                Gender = GetGender(UserInfo)
             };
 
             _db.User.Add(newUser);
             _db.SaveChanges();
         }
 
-        private Person GetProfile()
+        private Person GetGoogleProfile()
         {
-
-            UserCredential credential;
             ClientSecrets secrets = new ClientSecrets()
             {
                 ClientId = Configuration["Authentication:Google:ClientId"],
                 ClientSecret = Configuration["Authentication:Google:ClientSecret"]
             };
 
-            string credPath = System.Environment.GetFolderPath(
-                            System.Environment.SpecialFolder.Personal);
-            credPath = Path.Combine(credPath, ".credentials/people-dotnet-quickstart");
-
-            credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    secrets,
-                    Scopes,
-                    "me",
-                    CancellationToken.None).Result;
+            UserCredential credential = GoogleWebAuthorizationBroker.AuthorizeAsync(secrets, Scopes, "me", CancellationToken.None).Result;
 
             var peopleService = new PeopleServiceService(new BaseClientService.Initializer()
             {
@@ -107,22 +92,23 @@ namespace Speet.Controllers
             return profile;
         }
 
-        private GenderType GenderConvert(Person user)
+        private GenderType GetGender(Person user)
         {
-            if (user.Genders?.FirstOrDefault()?.FormattedValue == "Male")
+            string genderString = user.Genders?.FirstOrDefault().Value;
+            switch(genderString)
             {
-                return GenderType.Male;
-            }
+                case "male":
+                    return GenderType.Male;
 
-            if (user.Genders?.FirstOrDefault()?.FormattedValue == "Female")
-            {
-                return GenderType.Female;
-            }
+                case "female":
+                    return GenderType.Female;
 
-            return GenderType.Other;
+                default:
+                    return GenderType.Other;
+            }
         }
 
-        private DateTime BirthdayConvert(Person user)
+        private DateTime GetBirthday(Person user)
         {
             DateTime birthday = Convert.ToDateTime(user.Birthdays?.FirstOrDefault()?.Text);
             return birthday;
