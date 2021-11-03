@@ -46,7 +46,7 @@ namespace Speet.Controllers
         public IActionResult GoogleResponse()
         {
             string googleId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (_db.User.Find(googleId) != null)
+            if (_db.User.Find(googleId) == null)
                 CreateUser(googleId);
 
             return RedirectToAction("DiscoverGroups", "SportGroup");
