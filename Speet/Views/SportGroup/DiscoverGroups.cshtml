@@ -36,7 +36,7 @@
                     {
                         <div>
                             <input type="checkbox" name="ActivityCategories" value="@activityTag.ActivityCategory" checked="@checkedActivities.Contains(activityTag.ActivityCategory)" />
-                            <img src="@activityTag.IconUrl" title="@activityTag.ActivityCategory"/>
+                            <img src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
                         </div>
                     }
                 </div>
@@ -47,7 +47,7 @@
                     {
                         <div>
                             <input type="checkbox" name="GenderRestrictions" value="@genderRestrictionTag.GenderRestriction" checked="@checkedGenderRestrictions.Contains(genderRestrictionTag.GenderRestriction)" />
-                            <img src="@genderRestrictionTag.IconUrl" title="@genderRestrictionTag.GenderRestriction"/>
+                            <img src="@genderRestrictionTag.IconUrl" title="@genderRestrictionTag.GenderRestriction" />
                         </div>
                     }
                 </div>
@@ -76,11 +76,11 @@
                 <div class="dategrid">
                     <div class="hcenter">
                         <p>Von</p>
-                        <input id="mindate" type="datetime-local" name="MinDate" value="@minDate" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")"/>
+                        <input id="mindate" type="datetime-local" name="MinDate" value="@minDate" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
                     </div>
                     <div class="hcenter">
                         <p>Bis</p>
-                        <input id="maxdate" type="datetime-local" name="MaxDate" value="@maxDate" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")"/>
+                        <input id="maxdate" type="datetime-local" name="MaxDate" value="@maxDate" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
                     </div>
                 </div>
 
@@ -145,11 +145,11 @@
                                 @{
                                     foreach (var activityTag in sportGroup.ActivityTags)
                                     {
-                                        <img class="tagicon" src="@activityTag.IconUrl" title="@activityTag.ActivityCategory"/>
+                                        <img class="tagicon" src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
                                     }
                                     if (sportGroup.GenderRestrictionTag != null)
                                     {
-                                        <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" title="@sportGroup.GenderRestrictionTag.GenderRestriction"/>
+                                        <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" title="@sportGroup.GenderRestrictionTag.GenderRestriction" />
                                     }
                                 }
                             </td>
@@ -195,8 +195,9 @@
             }
             else
             {
-                <div class="nogroupstext">
-                    <h3 class="centerText">Es konnten keine Gruppen gefunden werden</h3>
+                <div class="nogroupstext centerText">
+                    <h3>Es konnten keine Gruppen gefunden werden</h3>
+                    <input class="primarybutton" type="button" value="Demo Gruppen erstellen" onclick="location.href='/SportGroup/CreateDemoData'" />
                 </div>
             }
         }

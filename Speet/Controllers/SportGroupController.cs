@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Speet.Models;
 using Speet.Models.ContainerModels;
 using Speet.Models.HttpRequestModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -242,6 +243,51 @@ namespace Speet.Controllers
             _db.SaveChanges();
 
             return Json(new { success = true });
+        }
+
+        private static readonly Random _rnd = new Random();
+        public IActionResult CreateDemoData()
+        {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Start", "Site");
+
+            User testUser = _db.User.Find(string.Concat(Enumerable.Repeat("0", 21)));
+            if (testUser == null)
+            {
+                testUser = new User()
+                {
+                    GoogleId = string.Concat(Enumerable.Repeat("0", 21)),
+                    Username = "TestUser",
+                    Gender = GenderType.Male,
+                    Birthday = DateTime.Today.AddYears(-18)
+                };
+
+                _db.User.Add(testUser);
+            }
+
+            for(int i = 1; i < 20; i++)
+            {
+                HashSet<ActivityTag> testActivityTags = new HashSet<ActivityTag>();
+                int numberOfTestActivityTags = _rnd.Next(1, 3);
+                for (int u = 0; u < numberOfTestActivityTags; u++)
+                    testActivityTags.Add(_db.ActivityTag.Find((ActivityCategoryType)_rnd.Next(0, 9)));
+
+                SportGroup testGroup = new SportGroup()
+                {
+                    GroupName = $"Test Gruppe {i}",
+                    CreatedBy = testUser,
+                    Location = "Not implemented",
+                    MeetupDate = DateTime.Now.AddDays(_rnd.Next(1, 30)),
+                    MaxParticipants = _rnd.Next(2, 20),
+                    ActivityTags = testActivityTags,
+                    GenderRestrictionTag = _db.GenderRestrictionTag.Find((GenderRestrictionType)_rnd.Next(0, 3))
+                };
+                testGroup.Participants.Add(testUser);
+                _db.SportGroup.Add(testGroup);
+            }
+
+            _db.SaveChanges();
+            return Redirect("DiscoverGroups");
         }
 
         private User GetUserFromRequest()
