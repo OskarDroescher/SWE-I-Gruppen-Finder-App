@@ -86,3 +86,28 @@ function handleJoinButtonClick(button) {
         }).done(function () { location.reload(true) });
     }
 }
+
+//Show participants popup
+var participantsbuttons = document.getElementsByClassName('participantsbutton');
+for (const button of participantsbuttons) {
+    button.addEventListener('click', function () { handleParticipantsButtonClick(button) })
+}
+
+function handleParticipantsButtonClick(button) {
+    var contentlayer = document.getElementById('contentlayer');
+    var popuplayer = document.getElementById('popuplayer');
+    var tableRow = button.closest(".tablerow");
+    var groupId = tableRow.querySelector('#groupid').innerText;
+
+    $.ajax({
+        url: '/SportGroup/GetParticipantsPartial',
+        data: { groupId: groupId },
+        async: false,
+        dataType: 'html',
+        success: function (result) {
+            popuplayer.innerHTML = result;
+            contentlayer.classList.add('blurred', 'ignoreclicks');
+            popuplayer.classList.remove('hidden');
+        }
+    });
+}

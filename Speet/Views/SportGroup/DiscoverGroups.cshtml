@@ -18,194 +18,198 @@
         maxDate = Model.FilterSettings.MaxDate.Value.ToString("yyyy-MM-ddTHH:mm");
 }
 
-    <link rel="stylesheet" href="~/css/discovergroups.css" />
+<link rel="stylesheet" href="~/css/discovergroups.css" />
+<link rel="stylesheet" href="~/css/participants.css" />
 
-    <div class="viewcontainer">
-        <div id="pageindex" class="hidden">@Model.PaginationInfo.CurrentPageIndex</div>
-        <div class="filtercontainer">
-            <form id="filterformgrid" asp-controller="SportGroup" asp-action="DiscoverGroups">
-                <h3>Filter</h3>
-                <div class="text-right vcenter">
-                    <span id="resetbutton">Zurücksetzen</span>
-                    <img id="resetbuttonicon" src="~/icons/reset-icon.png" />
-                </div>
+<div class="viewcontainer">
+    <div id="pageindex" class="hidden">@Model.PaginationInfo.CurrentPageIndex</div>
+    <div class="filtercontainer">
+        <form id="filterformgrid" asp-controller="SportGroup" asp-action="DiscoverGroups">
+            <h3>Filter</h3>
+            <div class="text-right vcenter">
+                <span id="resetbutton">Zurücksetzen</span>
+                <img id="resetbuttonicon" src="~/icons/reset-icon.png" />
+            </div>
 
-                <b>Aktivität</b>
-                <div class="activitygrid">
-                    @foreach (var activityTag in Model.AllActivityTags)
-                    {
-                        <div>
-                            <input type="checkbox" name="ActivityCategories" value="@activityTag.ActivityCategory" checked="@checkedActivities.Contains(activityTag.ActivityCategory)" />
-                            <img src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
-                        </div>
-                    }
-                </div>
-
-                <b>Geschlecht</b>
-                <div class="gendergrid">
-                    @foreach (var genderRestrictionTag in Model.AllGenderRestrictionTags)
-                    {
-                        <div>
-                            <input type="checkbox" name="GenderRestrictions" value="@genderRestrictionTag.GenderRestriction" checked="@checkedGenderRestrictions.Contains(genderRestrictionTag.GenderRestriction)" />
-                            <img src="@genderRestrictionTag.IconUrl" title="@genderRestrictionTag.GenderRestriction" />
-                        </div>
-                    }
-                </div>
-
-                <b>Max. Entfernung</b>
-                <div>
-                    <input id="maxdistanceslider" class="slider" type="range" min="@ApplicationConstants.MinShownSportGroupDistance" max="@ApplicationConstants.MaxShownSportGroupDistance" name="MaxDistance" value="@maxDistance" />
-                    <div class="right">
-                        <input id="maxdistanceslidervalue" type="number" class="valuelabel" min="1" max="250" />
-                        <span>km</span>
+            <b>Aktivität</b>
+            <div class="activitygrid">
+                @foreach (var activityTag in Model.AllActivityTags)
+                {
+                    <div>
+                        <input type="checkbox" name="ActivityCategories" value="@activityTag.ActivityCategory" checked="@checkedActivities.Contains(activityTag.ActivityCategory)" />
+                        <img src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
                     </div>
-                </div>
-
-
-                <b>Max. Teilnehmer</b>
-                <div>
-                    <input id="participantsslider" class="slider" type="range" min="@ApplicationConstants.MinSportGroupParticipants" max="@ApplicationConstants.MaxSportGroupParticipants" name="MaxParticipants" value="@maxParticipants" />
-                    <div class="right">
-                        <input id="participantsslidervalue" type="number" class="valuelabel" min="2" max="20" />
-                        <span>Personen</span>
-                    </div>
-                </div>
-
-
-                <b>Datum</b>
-                <div class="dategrid">
-                    <div class="hcenter">
-                        <p>Von</p>
-                        <input id="mindate" type="datetime-local" name="MinDate" value="@minDate" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
-                    </div>
-                    <div class="hcenter">
-                        <p>Bis</p>
-                        <input id="maxdate" type="datetime-local" name="MaxDate" value="@maxDate" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
-                    </div>
-                </div>
-
-                <input id="submitbutton" type="submit" class="primarybutton hcenter" value="Anwenden" />
-            </form>
-        </div>
-
-        <div class="mapcontainer" id="map">
-            <script>
-                function initMap() {
-                    const myLatLng = { lat: -25.363, lng: 131.044 };
-                    const map = new google.maps.Map(document.getElementById("map"), {
-                        zoom: 4,
-                        center: myLatLng,
-                    });
                 }
-            </script>
-            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyFncc8DAmnkXS1XPR9IIDcvB7DeCQ84c&callback=initMap&v=weekly"></script>
-        </div>
+            </div>
 
-        @{
-            if (Model.SportGroupsToDisplay.Count > 0)
-            {
-                <table class="sportgroupstable">
-                    <tr>
-                        <th width="40%">
-                            <h3 class="centerText">Gruppenname</h3>
-                        </th>
+            <b>Geschlecht</b>
+            <div class="gendergrid">
+                @foreach (var genderRestrictionTag in Model.AllGenderRestrictionTags)
+                {
+                    <div>
+                        <input type="checkbox" name="GenderRestrictions" value="@genderRestrictionTag.GenderRestriction" checked="@checkedGenderRestrictions.Contains(genderRestrictionTag.GenderRestriction)" />
+                        <img src="@genderRestrictionTag.IconUrl" title="@genderRestrictionTag.GenderRestriction" />
+                    </div>
+                }
+            </div>
 
-                        <th width="10%">
-                            <h3 class="centerText">Teilnehmer</h3>
-                        </th>
-
-                        <th width="15%">
-                            <h3 class="centerText">Tags</h3>
-                        </th>
-
-                        <th width="10%">
-                            <h3 class="centerText">Standort</h3>
-                        </th>
-
-                        <th width="10%">
-                            <h3 class="centerText">Datum</h3>
-                        </th>
-
-                        <th width="15%"></th>
-                    </tr>
-
-                    @foreach (var sportGroup in Model.SportGroupsToDisplay)
-                    {
-                        <tr class="tablerow">
-                            <td class="firsttablecolumn">
-                                <div id="groupid" class="hidden">@sportGroup.Id</div>
-                                <span id="groupname">@sportGroup.GroupName</span>
-                            </td>
-
-                            <td class="centerText">
-                                <span>@sportGroup.Participants.Count / @sportGroup.MaxParticipants</span>
-                            </td>
-
-                            <td class="centerText">
-                                @{
-                                    foreach (var activityTag in sportGroup.ActivityTags)
-                                    {
-                                        <img class="tagicon" src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
-                                    }
-                                    if (sportGroup.GenderRestrictionTag != null)
-                                    {
-                                        <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" title="@sportGroup.GenderRestrictionTag.GenderRestriction" />
-                                    }
-                                }
-                            </td>
-
-                            <td class="centerText">
-                                <img class="mapicon" src="/icons/maps-icon.png" />
-                            </td>
-
-                            <td class="centerText">
-                                <span>@sportGroup.MeetupDate.ToString("dd.MM.yyyy") / @sportGroup.MeetupDate.ToString("H:mm") Uhr</span>
-                            </td>
-
-                            <td class="centerText lasttablecolumn">
-                                <input class="primarybutton center joinbutton" type="button" value="Beitreten" />
-                            </td>
-                        </tr>
-                    }
-                </table>
-
-                <div class="paginationcontainer hcenter">
-                    @if (Model.PaginationInfo.PreviousPageIndexes.Count() > 0)
-                    {
-                        <input class="primarybutton paginationbutton adjacentpagebutton use-all-space" type="button" value="Zurück" onclick="location.href='/SportGroup/DiscoverGroups/@(Model.PaginationInfo.CurrentPageIndex-1)?@filterSettingsQuery'" />
-                    }
-
-                    @foreach (var prevPageIndex in Model.PaginationInfo.PreviousPageIndexes)
-                    {
-                        <input class="primarybutton paginationbutton pageindexbutton use-all-space" type="button" value="@prevPageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@prevPageIndex?@filterSettingsQuery'" />
-                    }
-
-                    <input class="primarybutton paginationbutton pageindexbutton currentpagebutton use-all-space" type="button" value="@Model.PaginationInfo.CurrentPageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@Model.PaginationInfo.CurrentPageIndex?@filterSettingsQuery'" />
-
-                    @foreach (var nextPageIndex in Model.PaginationInfo.NextPageIndexes)
-                    {
-                        <input class="primarybutton paginationbutton pageindexbutton use-all-space" type="button" value="@nextPageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@nextPageIndex?@filterSettingsQuery'" />
-                    }
-
-                    @if (Model.PaginationInfo.NextPageIndexes.Count() > 0)
-                    {
-                        <input class="primarybutton paginationbutton adjacentpagebutton use-all-space" type="button" value="Weiter" onclick="location.href='/SportGroup/DiscoverGroups/@(Model.PaginationInfo.CurrentPageIndex+1)?@filterSettingsQuery'" />
-                    }
+            <b>Max. Entfernung</b>
+            <div>
+                <input id="maxdistanceslider" class="slider" type="range" min="@ApplicationConstants.MinShownSportGroupDistance" max="@ApplicationConstants.MaxShownSportGroupDistance" name="MaxDistance" value="@maxDistance" />
+                <div class="right">
+                    <input id="maxdistanceslidervalue" type="number" class="valuelabel" min="1" max="250" />
+                    <span>km</span>
                 </div>
-            }
-            else
-            {
-                <div class="nogroupstext centerText">
-                    <h3>Es konnten keine Gruppen gefunden werden</h3>
-                    <input class="primarybutton" type="button" value="Demo Gruppen erstellen" onclick="location.href='/SportGroup/CreateDemoData'" />
-                </div>
-            }
-        }
+            </div>
 
+
+            <b>Max. Teilnehmer</b>
+            <div>
+                <input id="participantsslider" class="slider" type="range" min="@ApplicationConstants.MinSportGroupParticipants" max="@ApplicationConstants.MaxSportGroupParticipants" name="MaxParticipants" value="@maxParticipants" />
+                <div class="right">
+                    <input id="participantsslidervalue" type="number" class="valuelabel" min="2" max="20" />
+                    <span>Personen</span>
+                </div>
+            </div>
+
+
+            <b>Datum</b>
+            <div class="dategrid">
+                <div class="hcenter">
+                    <p>Von</p>
+                    <input id="mindate" type="datetime-local" name="MinDate" value="@minDate" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
+                </div>
+                <div class="hcenter">
+                    <p>Bis</p>
+                    <input id="maxdate" type="datetime-local" name="MaxDate" value="@maxDate" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
+                </div>
+            </div>
+
+            <input id="submitbutton" type="submit" class="primarybutton hcenter" value="Anwenden" />
+        </form>
     </div>
+
+    <div class="mapcontainer" id="map">
+        <script>
+            function initMap() {
+                const myLatLng = { lat: -25.363, lng: 131.044 };
+                const map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 4,
+                    center: myLatLng,
+                });
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyFncc8DAmnkXS1XPR9IIDcvB7DeCQ84c&callback=initMap&v=weekly"></script>
+    </div>
+
+    @{
+        if (Model.SportGroupsToDisplay.Count > 0)
+        {
+            <table class="sportgroupstable">
+                <tr>
+                    <th width="40%">
+                        <h3 class="centerText">Gruppenname</h3>
+                    </th>
+
+                    <th width="10%">
+                        <h3 class="centerText">Teilnehmer</h3>
+                    </th>
+
+                    <th width="15%">
+                        <h3 class="centerText">Tags</h3>
+                    </th>
+
+                    <th width="10%">
+                        <h3 class="centerText">Standort</h3>
+                    </th>
+
+                    <th width="10%">
+                        <h3 class="centerText">Datum</h3>
+                    </th>
+
+                    <th width="15%"></th>
+                </tr>
+
+                @foreach (var sportGroup in Model.SportGroupsToDisplay)
+                {
+                    <tr class="tablerow">
+                        <td class="firsttablecolumn">
+                            <div id="groupid" class="hidden">@sportGroup.Id</div>
+                            <span id="groupname">@sportGroup.GroupName</span>
+                        </td>
+
+                        <td class="centerText">
+                            <div class="participantsgrid">
+                                <span class="text-right vcenter">@sportGroup.Participants.Count / @sportGroup.MaxParticipants</span>
+                                <button class="primarybutton participantsbutton left"><img src="/icons/participants-icon.png" /></button>
+                            </div>
+                        </td>
+
+                        <td class="centerText">
+                            @{
+                                foreach (var activityTag in sportGroup.ActivityTags)
+                                {
+                                    <img class="tagicon" src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
+                                }
+                                if (sportGroup.GenderRestrictionTag != null)
+                                {
+                                    <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" title="@sportGroup.GenderRestrictionTag.GenderRestriction" />
+                                }
+                            }
+                        </td>
+
+                        <td class="centerText">
+                            <img class="mapicon" src="/icons/maps-icon.png" />
+                        </td>
+
+                        <td class="centerText">
+                            <span>@sportGroup.MeetupDate.ToString("dd.MM.yyyy") / @sportGroup.MeetupDate.ToString("H:mm") Uhr</span>
+                        </td>
+
+                        <td class="centerText lasttablecolumn">
+                            <input class="primarybutton center joinbutton" type="button" value="Beitreten" />
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            <div class="paginationcontainer hcenter">
+                @if (Model.PaginationInfo.PreviousPageIndexes.Count() > 0)
+                {
+                    <input class="primarybutton paginationbutton adjacentpagebutton use-all-space" type="button" value="Zurück" onclick="location.href='/SportGroup/DiscoverGroups/@(Model.PaginationInfo.CurrentPageIndex-1)?@filterSettingsQuery'" />
+                }
+
+                @foreach (var prevPageIndex in Model.PaginationInfo.PreviousPageIndexes)
+                {
+                    <input class="primarybutton paginationbutton pageindexbutton use-all-space" type="button" value="@prevPageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@prevPageIndex?@filterSettingsQuery'" />
+                }
+
+                <input class="primarybutton paginationbutton pageindexbutton currentpagebutton use-all-space" type="button" value="@Model.PaginationInfo.CurrentPageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@Model.PaginationInfo.CurrentPageIndex?@filterSettingsQuery'" />
+
+                @foreach (var nextPageIndex in Model.PaginationInfo.NextPageIndexes)
+                {
+                    <input class="primarybutton paginationbutton pageindexbutton use-all-space" type="button" value="@nextPageIndex" onclick="location.href='/SportGroup/DiscoverGroups/@nextPageIndex?@filterSettingsQuery'" />
+                }
+
+                @if (Model.PaginationInfo.NextPageIndexes.Count() > 0)
+                {
+                    <input class="primarybutton paginationbutton adjacentpagebutton use-all-space" type="button" value="Weiter" onclick="location.href='/SportGroup/DiscoverGroups/@(Model.PaginationInfo.CurrentPageIndex+1)?@filterSettingsQuery'" />
+                }
+            </div>
+        }
+        else
+        {
+            <div class="nogroupstext centerText">
+                <h3>Es konnten keine Gruppen gefunden werden</h3>
+                <input class="primarybutton" type="button" value="Demo Gruppen erstellen" onclick="location.href='/SportGroup/CreateDemoData'" />
+            </div>
+        }
+    }
+
+</div>
 
 <script src="~/js/discovergroups.js" asp-append-version="true"></script>
 
 
-    
+
 

@@ -245,6 +245,15 @@ namespace Speet.Controllers
             return Json(new { success = true });
         }
 
+        public ActionResult GetParticipantsPartial(long groupId)
+        {
+            SportGroup sportGroup = _db.SportGroup.Find(groupId);
+            if (sportGroup == null)
+                return Json(new { success = false });
+
+            return PartialView("~/Views/Shared/_ParticipantsPartial.cshtml", sportGroup.Participants.ToList());
+        }
+
         private static readonly Random _rnd = new Random();
         public IActionResult CreateDemoData()
         {

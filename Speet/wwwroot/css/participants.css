@@ -1,0 +1,24 @@
+﻿.participantswrapper {
+    width: 500px;
+    height: 400px;
+    margin-top: 25px;
+    background-color: #1265b5;
+    border: solid 3px Black;
+    border-radius: 10px;
+    color: #ffffff;
+}
+
+.participantsheading {
+    margin-top: 5px;
+    display: block;
+    text-align: center;
+}
+
+#participantsgrid {
+    display: grid;
+    grid-row-gap: 20px;
+    padding: 5px 5px;
+    height: 340px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}

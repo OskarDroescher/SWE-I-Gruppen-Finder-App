@@ -45,6 +45,13 @@
     text-align: center;
 }
 
+.absolutecenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .invalidtextcolor {
     color: #ff4040;
 }
@@ -139,4 +146,19 @@
 .hidden {
     display: none;
     overflow: hidden;
+}
+
+.blurred {
+    -webkit-filter: grayscale(0.5) blur(5px);
+    -moz-filter: grayscale(0.5) blur(5px);
+    -ms-filter: grayscale(0.5) blur(5px);
+    filter: grayscale(0.5) blur(5px);
+}
+
+.ignoreclicks {
+    pointer-events: none;
+}
+
+.text-right {
+    text-align: right;
 }

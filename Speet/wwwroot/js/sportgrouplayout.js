@@ -16,3 +16,17 @@ function playSidebarAnimation() {
 
     sidebarextended = !sidebarextended;
 }
+
+var popuplayer = document.getElementById('popuplayer');
+var contentlayer = document.getElementById('contentlayer');
+
+popuplayer.addEventListener('click', function (e) {
+    if (e.target.id == 'popuplayer')
+        closepopup();
+});
+
+function closepopup() {
+    popuplayer.innerHTML = '';
+    popuplayer.classList.add('hidden');
+    contentlayer.classList.remove('blurred', 'ignoreclicks');
+}

@@ -5,6 +5,7 @@
 }
 
 <link rel="stylesheet" href="~/css/mygroups.css" />
+<link rel="stylesheet" href="~/css/participants.css" />
 
 
 @if (Model.UserToDisplay.CreatedGroups.Count > 0 || Model.UserToDisplay.JoinedGroups.Count > 0)
@@ -40,7 +41,10 @@
                     </td>
 
                     <td class="centerText oneline">
-                        <span>@sportGroup.Participants.Count / @sportGroup.MaxParticipants</span>
+                        <div class="participantsgrid">
+                            <span class="text-right vcenter">@sportGroup.Participants.Count / @sportGroup.MaxParticipants</span>
+                            <button class="primarybutton participantsbutton left"><img src="/icons/participants-icon.png" /></button>
+                        </div>
                     </td>
 
                     <td class="centerText">

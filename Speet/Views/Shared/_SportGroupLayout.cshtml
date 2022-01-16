@@ -32,7 +32,11 @@
         </ul>
     </div>
 
-    <div class="use-all-space">
+    <div id="popuplayer" class="use-all-space hidden">
+        @*Put pop up content here through JavaScript*@
+    </div>
+
+    <div id="contentlayer" class="use-all-space">
         <main class="use-all-space" role="main">
             @RenderBody()
         </main>
@@ -47,7 +51,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/navbar.js" asp-append-version="true"></script>
+    <script src="~/js/sportgrouplayout.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
