@@ -5,7 +5,10 @@
     <div id="participantsgrid" class="use-all-space">
         @foreach(var user in Model)
         {
-
+            <div>
+                <img src="@user.Picture" alt="Avatar von @user.Username;" class="rounded-circle avatar" />
+                <span>@user.Username;</span>
+            </div>
         }
     </div>
 </div>

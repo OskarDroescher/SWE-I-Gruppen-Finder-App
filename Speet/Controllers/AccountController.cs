@@ -49,7 +49,18 @@ namespace Speet.Controllers
             if (_db.User.Find(googleId) == null)
                 CreateUser(googleId);
 
+            if (_db.User.Find(googleId).Picture != User.FindFirst("urn:google:picture")?.Value)
+                GetProfilePicture(googleId);
+
             return RedirectToAction("DiscoverGroups", "SportGroup");
+        }
+
+        private void GetProfilePicture(string googleId)
+        {
+            User user = _db.User.Find(googleId);
+            user.Picture = User.FindFirst("urn:google:picture")?.Value;
+            _db.User.Update(user);
+            _db.SaveChanges();
         }
 
         private void CreateUser(string userId)
