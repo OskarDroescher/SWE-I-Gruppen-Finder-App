@@ -14,9 +14,13 @@
     text-align: center;
 }
 
-#participantstable {
+#participantslist {
     padding: 5px 5px;
     height: 340px;
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+#participantslist p {
+    display: block;
 }

@@ -1,13 +1,11 @@
 ﻿@model List<User>
 
-<div class="absolutecenter participantswrapper">
-    <h3 class="participantsheading">Teilnehmer</h3>
-    <table id="participantstable" class="use-all-space">
-        @foreach (var user in Model)
-        {
-            <tr>
+    <div class="absolutecenter participantswrapper">
+        <h3 class="participantsheading">Teilnehmer</h3>
+        <div id="participantslist">
+            @foreach (var user in Model)
+            {
                 <p><img src="@user.PictureUrl" alt="Avatar von @user.Username" class="rounded-circle avatar" />@user.Username</p>
-            </tr>
-        }
-    </table>
-</div>
+            }
+        </div>
+    </div>
