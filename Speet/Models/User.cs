@@ -18,7 +18,8 @@ namespace Speet.Models
         [Required]
         public GenderType Gender { get; set; }
 
-        public string? Picture { get; set; }
+        [Required]
+        public string PictureUrl { get; set; }
 
         public virtual ICollection<SportGroup> CreatedGroups { get; set; }
 

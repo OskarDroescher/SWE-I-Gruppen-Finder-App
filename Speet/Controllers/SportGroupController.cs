@@ -268,7 +268,8 @@ namespace Speet.Controllers
                     GoogleId = string.Concat(Enumerable.Repeat("0", 21)),
                     Username = "TestUser",
                     Gender = GenderType.Male,
-                    Birthday = DateTime.Today.AddYears(-18)
+                    Birthday = DateTime.Today.AddYears(-18),
+                    PictureUrl = "https://i.stack.imgur.com/34AD2.jpg"
                 };
 
                 _db.User.Add(testUser);

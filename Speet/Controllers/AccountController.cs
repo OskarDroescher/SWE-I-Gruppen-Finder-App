@@ -46,24 +46,18 @@ namespace Speet.Controllers
         public IActionResult GoogleResponse()
         {
             string googleId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (_db.User.Find(googleId) == null)
-                CreateUser(googleId);
+            User user = _db.User.Find(googleId);
 
-            if (_db.User.Find(googleId).Picture != User.FindFirst("urn:google:picture")?.Value)
-                GetProfilePicture(googleId);
+            if (user == null)
+                user = CreateUser(googleId);
+
+            if (user.PictureUrl != User.FindFirst("urn:google:picture")?.Value)
+                UpdateProfilePicture(user);
 
             return RedirectToAction("DiscoverGroups", "SportGroup");
         }
 
-        private void GetProfilePicture(string googleId)
-        {
-            User user = _db.User.Find(googleId);
-            user.Picture = User.FindFirst("urn:google:picture")?.Value;
-            _db.User.Update(user);
-            _db.SaveChanges();
-        }
-
-        private void CreateUser(string userId)
+        private User CreateUser(string userId)
         {
             Person UserInfo = GetGoogleProfile();
 
@@ -72,11 +66,13 @@ namespace Speet.Controllers
                 GoogleId = userId,
                 Username = User.Identity.Name,
                 Birthday = GetBirthday(UserInfo),
-                Gender = GetGender(UserInfo)
+                Gender = GetGender(UserInfo),
+                PictureUrl = GetProfilePicture()
             };
 
             _db.User.Add(newUser);
             _db.SaveChanges();
+            return newUser;
         }
 
         private Person GetGoogleProfile()
@@ -123,6 +119,18 @@ namespace Speet.Controllers
         {
             DateTime birthday = Convert.ToDateTime(user.Birthdays?.FirstOrDefault()?.Text);
             return birthday;
+        }
+
+        private string GetProfilePicture()
+        {
+            return User.FindFirst("urn:google:picture")?.Value;
+        }
+
+        private void UpdateProfilePicture(User user)
+        {
+            user.PictureUrl = User.FindFirst("urn:google:picture")?.Value;
+            _db.User.Update(user);
+            _db.SaveChanges();
         }
 
         [HttpGet, Route("Logout")]
