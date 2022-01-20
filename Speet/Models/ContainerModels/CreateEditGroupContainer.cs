@@ -7,5 +7,6 @@ namespace Speet.Models.ContainerModels
         public SportGroup SportGroupToEdit { get; set; }
         public List<ActivityTag> AllActivityTags { get; set; }
         public List<GenderRestrictionTag> AllGenderRestrictionTags { get; set; }
+        public User GroupCreator { get; set; }
     }
 }

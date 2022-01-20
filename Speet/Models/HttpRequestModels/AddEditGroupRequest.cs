@@ -9,11 +9,13 @@ namespace Speet.Models.HttpRequestModels
         public List<ActivityCategoryType> ActivityCategories { get; set; }
         public GenderRestrictionType GenderRestriction { get; set; }
         public int MaxParticipants { get; set; }
+        public List<string> ParticipantsIds { get; set; }
         public DateTime? MeetupDate { get; set; }
 
         public AddEditGroupRequest()
         {
             ActivityCategories = new List<ActivityCategoryType>();
+            ParticipantsIds = new List<string>();
         }
     }
 }

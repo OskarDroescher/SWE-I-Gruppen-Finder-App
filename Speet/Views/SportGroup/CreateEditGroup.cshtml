@@ -10,19 +10,8 @@
     string meetupDateTime;
     string submitButtonText;
 
-    if (Model.SportGroupToEdit == null)
-    {
-        ViewData["Title"] = "Gruppe erstellen";
-        action = "AddGroup";
-        groupName = string.Empty;
-        checkedActivities = Enumerable.Empty<ActivityCategoryType>().ToList();
-        checkedGenderRestriction = GenderRestrictionType.NoRestriction;
-        minParticipants = ApplicationConstants.MinSportGroupParticipants;
-        maxParticipants = ApplicationConstants.MaxSportGroupParticipants;
-        meetupDateTime = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
-        submitButtonText = "Gruppe erstellen";
-    }
-    else
+    bool editMode = Model.SportGroupToEdit != null;
+    if (editMode)
     {
         ViewData["Title"] = "Gruppe bearbeiten";
         action = "UpdateGroup";
@@ -37,61 +26,103 @@
         meetupDateTime = Model.SportGroupToEdit.MeetupDate.ToString("yyyy-MM-ddTHH:mm");
         submitButtonText = "Gruppe bearbeiten";
     }
+    else
+    {
+        ViewData["Title"] = "Gruppe erstellen";
+        action = "AddGroup";
+        groupName = string.Empty;
+        checkedActivities = Enumerable.Empty<ActivityCategoryType>().ToList();
+        checkedGenderRestriction = GenderRestrictionType.NoRestriction;
+        minParticipants = ApplicationConstants.MinSportGroupParticipants;
+        maxParticipants = ApplicationConstants.MaxSportGroupParticipants;
+        meetupDateTime = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
+        submitButtonText = "Gruppe erstellen";
+    }
 }
 
 <link rel="stylesheet" href="~/css/createeditgroup.css" />
 
 <div class="viewcontainer">
-    <form class="propertiesformgrid" asp-controller="SportGroup" asp-action="@action">
-        <h3 class="propertiesheading">Eigenschaften</h3>
+    <div class="inline-block">
+        <form class="propertiesformgrid" asp-controller="SportGroup" asp-action="@action">
+            <h3 class="propertiesheading">Eigenschaften</h3>
 
-        <b id="groupnameheading">Gruppenname</b>
-        <input id="groupname" type="text" class="textfield" name="GroupName" value="@groupName" maxlength="@ApplicationConstants.MaxGroupNameLength" />
+            <b id="groupnameheading">Gruppenname</b>
+            <input id="groupname" type="text" class="textfield" name="GroupName" value="@groupName" maxlength="@ApplicationConstants.MaxGroupNameLength" />
 
-        <div>
-            <b id="activityheading">Aktivitäten</b>
-        </div>
-        <div class="activitygrid">
-            @foreach (var activityTag in Model.AllActivityTags)
-            {
-                <div>
-                    <input type="checkbox" name="ActivityCategories" value="@activityTag.ActivityCategory" checked="@checkedActivities.Contains(activityTag.ActivityCategory)" />
-                    <img src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
-                </div>
-            }
-        </div>
-
-        <b>Geschlechtsbeschränkung</b>
-        <div class="gendergrid">
-            @foreach (var genderRestrictionTag in Model.AllGenderRestrictionTags)
-            {
-                <div>
-                    <input type="radio" name="GenderRestriction" value="@genderRestrictionTag.GenderRestriction" checked="@(checkedGenderRestriction == genderRestrictionTag.GenderRestriction)" />
-                    <img src="@genderRestrictionTag.IconUrl" title="@genderRestrictionTag.GenderRestriction" />
-                </div>
-            }
-        </div>
-
-        <b>Max. Teilnehmer</b>
-        <div>
-            <input id="participantsslider" class="slider" type="range" min="@minParticipants" max="@maxParticipants" name="MaxParticipants" value="@maxParticipants" />
-            <div class="right">
-                <input id="participantsslidervalue" type="number" class="valuelabel" min="2" max="20" />
-                <span>Personen</span>
+            <div>
+                <b id="activityheading">Aktivitäten</b>
             </div>
-        </div>
+            <div class="activitygrid">
+                @foreach (var activityTag in Model.AllActivityTags)
+                {
+                    <div>
+                        <input type="checkbox" name="ActivityCategories" value="@activityTag.ActivityCategory" checked="@checkedActivities.Contains(activityTag.ActivityCategory)" />
+                        <img src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
+                    </div>
+                }
+            </div>
 
-        <b id="meetuptimeheading">Datum und Zeit</b>
-        <input id="datetimecalender" type="datetime-local" class="hcenter" name="MeetupDate" value="@meetupDateTime" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
+            <b>Geschlechtsbeschränkung</b>
+            <div class="gendergrid">
+                @foreach (var genderRestrictionTag in Model.AllGenderRestrictionTags)
+                {
+                    <div>
+                        <input type="radio" name="GenderRestriction" value="@genderRestrictionTag.GenderRestriction" checked="@(checkedGenderRestriction == genderRestrictionTag.GenderRestriction)" />
+                        <img src="@genderRestrictionTag.IconUrl" title="@genderRestrictionTag.GenderRestriction" />
+                    </div>
+                }
+            </div>
 
-        @if (Model.SportGroupToEdit != null)
-        {
-            <input type="hidden" name="groupId" value="@Model.SportGroupToEdit.Id" />
-        }
+            <b id="meetuptimeheading">Datum und Zeit</b>
+            <input id="datetimecalender" type="datetime-local" class="hcenter" name="MeetupDate" value="@meetupDateTime" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
 
-        <input id="submitbutton" type="submit" class="primarybutton hcenter" value="@submitButtonText" />
+            <b id="maxparticipantsheading">Max. Teilnehmer</b>
+            <div>
+                <input id="participantsslider" class="slider" type="range" min="@minParticipants" max="@maxParticipants" name="MaxParticipants" value="@maxParticipants" />
+                <div class="right">
+                    <input id="participantsslidervalue" type="number" class="valuelabel" min="2" max="20" />
+                    <span>Personen</span>
+                </div>
+            </div>
 
-    </form>
+            @if (editMode)
+            {
+                <input type="hidden" name="groupId" value="@Model.SportGroupToEdit.Id" />
+            }
+
+            <b id="participantsheading">Teilnehmer</b>
+            <div class="participantswrapper">
+                @{
+                    if (editMode)
+                    {
+                        foreach (var participant in Model.SportGroupToEdit.Participants)
+                        {
+                            <div class="participantentry">
+                                <input type="hidden" name="ParticipantsIds" value="@participant.GoogleId" />
+                                <span class="vcenter"><img src="@participant.PictureUrl" alt="Avatar von @participant.Username" class="rounded-circle avatar" />@participant.Username</span>
+
+                                @if (Model.SportGroupToEdit.CreatedBy != participant)
+                                {
+                                    <input class="dangerbutton center removeparticipantbutton" type="button" value="Entfernen" />
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="participantentry">
+                            <input type="hidden" name="ParticipantsIds" value="@Model.GroupCreator.GoogleId" />
+                            <span class="vcenter"><img src="@Model.GroupCreator.PictureUrl" alt="Avatar von @Model.GroupCreator.Username" class="rounded-circle avatar" />@Model.GroupCreator.Username</span>
+                        </div>
+                    }
+                }
+            </div>
+
+            <input id="submitbutton" type="submit" class="primarybutton hcenter" value="@submitButtonText" />
+        </form>
+    </div>
+   
     <div class="mapcontainer" id="map">
         <script>
             function initMap() {

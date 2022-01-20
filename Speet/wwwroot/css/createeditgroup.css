@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 775px auto;
     font-size: 20px;
+    height: 100%;
 }
 
 .propertiesformgrid {
@@ -54,4 +55,31 @@
 #submitbutton {
     width: 400px;
     grid-column: span 2;
+}
+
+.participantswrapper {
+    height: 350px;
+    border: solid 3px Black;
+    border-radius: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.participantentry {
+    display: grid;
+    padding: 5px;
+    grid-template-columns: auto 140px;
+}
+
+    .participantentry span {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .participantentry:hover {
+        background-color: #0E5090;
+    }
+
+.removeparticipantbutton {
+    margin: 5px;
 }

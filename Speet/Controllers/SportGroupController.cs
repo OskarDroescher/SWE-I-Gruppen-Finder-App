@@ -97,11 +97,13 @@ namespace Speet.Controllers
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
 
+            User user = GetUserFromRequest();
             CreateEditGroupContainer viewContainer = new CreateEditGroupContainer()
             {
                 SportGroupToEdit = null,
                 AllActivityTags = _db.ActivityTag.AsNoTracking().ToList(),
-                AllGenderRestrictionTags = _db.GenderRestrictionTag.AsNoTracking().ToList()
+                AllGenderRestrictionTags = _db.GenderRestrictionTag.AsNoTracking().ToList(),
+                GroupCreator = user
             };
 
             return View("CreateEditGroup", viewContainer);
@@ -124,7 +126,8 @@ namespace Speet.Controllers
             {
                 SportGroupToEdit = groupToEdit,
                 AllActivityTags = _db.ActivityTag.AsNoTracking().ToList(),
-                AllGenderRestrictionTags = _db.GenderRestrictionTag.AsNoTracking().ToList()
+                AllGenderRestrictionTags = _db.GenderRestrictionTag.AsNoTracking().ToList(),
+                GroupCreator = user
             };
 
             return View("CreateEditGroup", viewContainer);
@@ -159,7 +162,10 @@ namespace Speet.Controllers
 
         private bool IsGroupValid(AddEditGroupRequest request)
         {
-            return (request.GroupName.Length > 0 && request.ActivityCategories.Count > 0 && request.MeetupDate.HasValue);
+            return (request.GroupName.Length > 0 &&
+                request.GroupName.Length <= ApplicationConstants.MaxGroupNameLength &&
+                request.ActivityCategories.Count > 0 &&
+                request.MeetupDate.HasValue);
         }
 
         public IActionResult UpdateGroup(AddEditGroupRequest request, long groupId)
@@ -189,9 +195,25 @@ namespace Speet.Controllers
             List<ActivityTag> requestedActivityTags = request.ActivityCategories.Select(ac => _db.ActivityTag.Find(ac)).ToList();
             requestedActivityTags.ForEach(at => groupToUpdate.ActivityTags.Add(at));
 
+            UpdateParticipants(groupToUpdate, request);
+
             _db.SaveChanges();
 
             return Redirect("MyGroups");
+        }
+
+        private void UpdateParticipants(SportGroup groupToUpdate, AddEditGroupRequest request)
+        {
+            List<string> oldParticipantsIds = groupToUpdate.Participants.Select(p => p.GoogleId).ToList();
+            List<string> newParticipantsIds = request.ParticipantsIds;
+            List<string> participantsIdsToRemove = oldParticipantsIds.Where(op => !newParticipantsIds.Contains(op)).ToList();
+
+            foreach(var participantId in participantsIdsToRemove)
+            {
+                User userToRemove = _db.User.Find(participantId);
+                if(userToRemove != groupToUpdate.CreatedBy)
+                    groupToUpdate.Participants.Remove(userToRemove);
+            }
         }
 
         public IActionResult JoinGroup(long groupId)

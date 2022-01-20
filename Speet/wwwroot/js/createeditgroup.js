@@ -7,6 +7,7 @@ participantslabel.value = participantsslider.value;
 
 participantsslider.oninput = function () {
     participantslabel.value = participantsslider.value;
+    validateForm();
 }
 
 participantslabel.oninput = function () {
@@ -15,13 +16,16 @@ participantslabel.oninput = function () {
 
 //Validate slider label input
 participantslabel.onblur = function () {
-    if (participantslabel.value > participantsslider.max) {
+    if (parseInt(participantslabel.value, 10) > parseInt(participantsslider.max, 10)) {
         participantslabel.value = participantsslider.max;
     }
 
-    if (participantslabel.value < participantsslider.min) {
+    if (parseInt(participantslabel.value, 10) < parseInt(participantsslider.min, 10)) {
         participantslabel.value = participantsslider.min;
     }
+
+    participantslabel.value = participantslabel.value.replace(/^0+/, ''); //Removes leading zeros
+    validateForm();
 }
 
 //Validate form input
@@ -40,6 +44,8 @@ meetuptimeinput.addEventListener('input', validateForm );
 var groupnameheading = document.getElementById('groupnameheading');
 var activityheading = document.getElementById('activityheading');
 var meetuptimeheading = document.getElementById('meetuptimeheading');
+var maxparticipantsheading = document.getElementById('maxparticipantsheading');
+var participantsheading = document.getElementById('participantsheading');
 var submitbutton = document.getElementById('submitbutton');
 function validateForm() {
     var forminvalid = false;
@@ -65,6 +71,16 @@ function validateForm() {
         meetuptimeheading.classList.add('invalidtextcolor');
     }
 
+    var participantentries = document.getElementsByClassName('participantentry');
+    if (participantentries.length <= participantsslider.value) {
+        maxparticipantsheading.classList.remove('invalidtextcolor');
+        participantsheading.classList.remove('invalidtextcolor');
+    } else {
+        forminvalid = true;
+        maxparticipantsheading.classList.add('invalidtextcolor');
+        participantsheading.classList.add('invalidtextcolor');
+    }
+
     submitbutton.disabled = forminvalid;
 }
 
@@ -74,5 +90,17 @@ function updateCheckedActivitiesCounter(checkbox) {
     } else {
         checkedactivitiescount--;
     }
+    validateForm();
+}
+
+//Remove participant
+var removeparticipantbuttons = document.getElementsByClassName('removeparticipantbutton');
+for (const button of removeparticipantbuttons) {
+    button.addEventListener('click', function () { handleRemoveParticipantButtonClick(button) })
+}
+
+function handleRemoveParticipantButtonClick(button) {
+    var participantEntry = button.closest(".participantentry");
+    participantEntry.remove();
     validateForm();
 }
