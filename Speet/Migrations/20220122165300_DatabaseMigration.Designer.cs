@@ -9,7 +9,7 @@ using Speet.Models;
 namespace Speet.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220117210548_DatabaseMigration")]
+    [Migration("20220122165300_DatabaseMigration")]
     partial class DatabaseMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,6 +87,9 @@ namespace Speet.Migrations
 
                     b.Property<DateTime>("MeetupDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("MeetupRecurrence")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

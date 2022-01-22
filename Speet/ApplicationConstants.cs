@@ -2,8 +2,8 @@
 {
     public abstract class ApplicationConstants
     {
-        //Database cleanup
-        public const string DatabaseCleanUpTime = "00:00:00";
+        //Server Actions
+        public const string DailyServerActionsTime = "00:00:00";
         public const int SportGroupsExpirationDays = 90;
 
         //Pagination

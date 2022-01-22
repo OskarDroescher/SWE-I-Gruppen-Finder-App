@@ -21,6 +21,9 @@ namespace Speet.Models
         [Required]
         public int MaxParticipants { get; set; }
 
+        [Required]
+        public MeetupRecurrenceType MeetupRecurrence { get; set; }
+
         public virtual User CreatedBy { get; set; }
 
         public virtual ICollection<User> Participants { get; set; }
@@ -34,5 +37,13 @@ namespace Speet.Models
             Participants = new HashSet<User>();
             ActivityTags = new HashSet<ActivityTag>();
         }
+    }
+
+    public enum MeetupRecurrenceType
+    {
+        OneTime,
+        Daily,
+        Weekly,
+        Monthly
     }
 }

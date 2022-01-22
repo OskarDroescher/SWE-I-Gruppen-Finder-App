@@ -8,6 +8,7 @@
     int minParticipants;
     int maxParticipants;
     string meetupDateTime;
+    MeetupRecurrenceType meetupRecurrrence;
     string submitButtonText;
 
     bool editMode = Model.SportGroupToEdit != null;
@@ -24,6 +25,7 @@
 
         maxParticipants = Model.SportGroupToEdit.MaxParticipants;
         meetupDateTime = Model.SportGroupToEdit.MeetupDate.ToString("yyyy-MM-ddTHH:mm");
+        meetupRecurrrence = Model.SportGroupToEdit.MeetupRecurrence;
         submitButtonText = "Gruppe bearbeiten";
     }
     else
@@ -36,6 +38,7 @@
         minParticipants = ApplicationConstants.MinSportGroupParticipants;
         maxParticipants = ApplicationConstants.MaxSportGroupParticipants;
         meetupDateTime = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
+        meetupRecurrrence = MeetupRecurrenceType.OneTime;
         submitButtonText = "Gruppe erstellen";
     }
 }
@@ -75,7 +78,15 @@
             </div>
 
             <b id="meetuptimeheading">Datum und Zeit</b>
-            <input id="datetimecalender" type="datetime-local" class="hcenter" name="MeetupDate" value="@meetupDateTime" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
+            <div class="meetuptimewrapper">
+                <input id="datetimecalender" type="datetime-local" class="hcenter" name="MeetupDate" value="@meetupDateTime" min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
+                <select name="MeetupRecurrence">
+                    <option value="OneTime" selected="@(meetupRecurrrence == MeetupRecurrenceType.OneTime)">Einmalig</option>
+                    <option value="Daily" selected="@(meetupRecurrrence == MeetupRecurrenceType.Daily)">Täglich</option>
+                    <option value="Weekly" selected="@(meetupRecurrrence == MeetupRecurrenceType.Weekly)">Wöchentlich</option>
+                    <option value="Monthly" selected="@(meetupRecurrrence == MeetupRecurrenceType.Monthly)">Monatlich</option>
+                </select>
+            </div>
 
             <b id="maxparticipantsheading">Max. Teilnehmer</b>
             <div>

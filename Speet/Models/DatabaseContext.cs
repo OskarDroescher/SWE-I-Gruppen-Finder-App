@@ -8,16 +8,16 @@ namespace Speet.Models
 {
     public class DatabaseContext : DbContext
     {
-        private static Timer _cleanUpTimer;
+        private static Timer _serverActionsTimer;
 
         static DatabaseContext()
         {
-            SetUpCleanUpTimer();
+            SetUpServerActionsTimer();
         }
 
-        private static void SetUpCleanUpTimer()
+        private static void SetUpServerActionsTimer()
         {
-            int[] dailyTimeParts = ApplicationConstants.DatabaseCleanUpTime.Split(':').Select(p => int.Parse(p)).ToArray();
+            int[] dailyTimeParts = ApplicationConstants.DailyServerActionsTime.Split(':').Select(p => int.Parse(p)).ToArray();
             TimeSpan dailyTimeSpan = new TimeSpan(dailyTimeParts[0], dailyTimeParts[1], dailyTimeParts[2]);
 
             int oneDayPeriod = (int)new TimeSpan(24, 0, 0).TotalMilliseconds;
@@ -30,28 +30,63 @@ namespace Speet.Models
             else
                 dueTime = oneDayPeriod - currentTime + dailyTime;
 
-            _cleanUpTimer = new Timer(
-                callback: CleanUpExpiredGroups,
+            _serverActionsTimer = new Timer(
+                callback: ExecuteServerActions,
                 state: null,
                 dueTime: dueTime,
                 period: oneDayPeriod);
         }
 
-        private static void CleanUpExpiredGroups(object timerState)
+        private static void ExecuteServerActions(object timerState)
         {
             using (DatabaseContext databaseContext = new DatabaseContext())
             {
-                DateTime expiredDate = DateTime.Now.AddDays(-ApplicationConstants.SportGroupsExpirationDays);
-
-                foreach (var group in databaseContext.SportGroup)
-                    if (group.MeetupDate.CompareTo(expiredDate) < 0)
-                        databaseContext.SportGroup.Remove(group);
+                UpdateMeetupDates(databaseContext);
+                CleanUpExpiredGroups(databaseContext);
+                databaseContext.SaveChanges();
             }
+        }
+
+        private static void UpdateMeetupDates(DatabaseContext databaseContext)
+        {
+            foreach (var group in databaseContext.SportGroup)
+            {
+                if (group.MeetupDate.CompareTo(DateTime.Now) <= 0)
+                {
+                    switch(group.MeetupRecurrence)
+                    {
+                        case MeetupRecurrenceType.Daily:
+                            {
+                                group.MeetupDate = group.MeetupDate.AddDays(1);
+                                break;
+                            }
+                        case MeetupRecurrenceType.Weekly:
+                            {
+                                group.MeetupDate = group.MeetupDate.AddDays(7);
+                                break;
+                            }
+                        case MeetupRecurrenceType.Monthly:
+                            {
+                                group.MeetupDate = group.MeetupDate.AddMonths(1);
+                                break;
+                            }
+                    }
+                }
+            }
+        }
+
+        private static void CleanUpExpiredGroups(DatabaseContext databaseContext)
+        {
+            DateTime expiredDate = DateTime.Now.AddDays(-ApplicationConstants.SportGroupsExpirationDays);
+
+            foreach (var group in databaseContext.SportGroup)
+                if (group.MeetupDate.CompareTo(expiredDate) <= 0)
+                    databaseContext.SportGroup.Remove(group);
         }
 
         private DatabaseContext()
         {
-            //Necessary for instantiating local database context for CleanUpExpiredGroups()
+            //Necessary for instantiating local database context for ExecuteServerActions()
         }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)

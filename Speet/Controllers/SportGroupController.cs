@@ -150,7 +150,8 @@ namespace Speet.Controllers
                 MaxParticipants = request.MaxParticipants,
                 CreatedBy = groupCreator,
                 ActivityTags = _db.ActivityTag.Where(at => request.ActivityCategories.Contains(at.ActivityCategory)).ToHashSet(),
-                GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction)
+                GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction),
+                MeetupRecurrence = request.MeetupRecurrence
             };
             newGroup.Participants.Add(groupCreator);
 
@@ -189,6 +190,7 @@ namespace Speet.Controllers
             groupToUpdate.MeetupDate = request.MeetupDate.Value;
             groupToUpdate.MaxParticipants = request.MaxParticipants;
             groupToUpdate.GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction);
+            groupToUpdate.MeetupRecurrence = request.MeetupRecurrence;
 
             //Warning: overwriting the groupToEdit.ActivityTags reference directly could throw an exception, thats why the list is just refilled
             groupToUpdate.ActivityTags.Clear();

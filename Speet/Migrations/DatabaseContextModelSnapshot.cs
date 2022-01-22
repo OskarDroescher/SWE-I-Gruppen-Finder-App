@@ -86,6 +86,9 @@ namespace Speet.Migrations
                     b.Property<DateTime>("MeetupDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("MeetupRecurrence")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedByGoogleId");
