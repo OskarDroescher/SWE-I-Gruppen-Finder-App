@@ -1,0 +1,63 @@
+﻿.confirmjoinwrapper {
+    width: 600px;
+    height: auto;
+    margin-top: 25px;
+    background-color: #1265b5;
+    border: solid 3px Black;
+    border-radius: 10px;
+    color: #ffffff;
+}
+
+.confirmjoinheading {
+    margin-top: 5px;
+    display: block;
+    text-align: center;
+}
+
+.confirmjoininfowrapper {
+    display: grid;
+    padding: 5px;
+    grid-template-columns: auto auto;
+}
+
+.groupinfowrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 295px;
+    height: 250px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+    .groupinfowrapper div {
+        display: block;
+    }
+
+#participantslist {
+    width: 290px;
+    height: 236px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+    #participantslist p {
+        display: block;
+    }
+
+.buttonwrapper {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-row-gap: 5px;
+    margin-top: 25px;
+    margin-bottom: 5px;
+}
+
+    .buttonwrapper h5{
+        grid-column: span 2;
+    }
+
+.confirmjoinbutton {
+    width: 100px;
+    height: 40px;
+}

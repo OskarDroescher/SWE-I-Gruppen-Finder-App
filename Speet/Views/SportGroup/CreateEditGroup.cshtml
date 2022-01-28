@@ -10,6 +10,7 @@
     string meetupDateTime;
     MeetupRecurrenceType meetupRecurrrence;
     string submitButtonText;
+    bool isPrivate;
 
     bool editMode = Model.SportGroupToEdit != null;
     if (editMode)
@@ -26,6 +27,7 @@
         maxParticipants = Model.SportGroupToEdit.MaxParticipants;
         meetupDateTime = Model.SportGroupToEdit.MeetupDate.ToString("yyyy-MM-ddTHH:mm");
         meetupRecurrrence = Model.SportGroupToEdit.MeetupRecurrence;
+        isPrivate = Model.SportGroupToEdit.IsPrivate;
         submitButtonText = "Gruppe bearbeiten";
     }
     else
@@ -39,6 +41,7 @@
         maxParticipants = ApplicationConstants.MaxSportGroupParticipants;
         meetupDateTime = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
         meetupRecurrrence = MeetupRecurrenceType.OneTime;
+        isPrivate = false;
         submitButtonText = "Gruppe erstellen";
     }
 }
@@ -76,6 +79,12 @@
                     </div>
                 }
             </div>
+
+            <b>Gruppen Privatsphäre</b>
+            <select name="IsPrivate" class="isprivateselector hcenter">
+                <option value="false" selected="@(!isPrivate)">Öffentlich</option>
+                <option value="true" selected="@isPrivate">Privat</option>
+            </select>
 
             <b id="meetuptimeheading">Datum und Zeit</b>
             <div class="meetuptimewrapper">

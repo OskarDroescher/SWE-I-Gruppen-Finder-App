@@ -205,10 +205,17 @@
             </div>
         }
     }
-
 </div>
 
+@if (TempData.ContainsKey("JoinPopupGroupId"))
+{
+    <link rel="stylesheet" href="~/css/confirmjoin.css" />
+    <input id="joinpopupgroupid" type="hidden" value="@TempData["JoinPopupGroupId"]" />
+    <script src="~/js/confirmjoin.js" asp-append-version="true"></script>
+}
+
 <script src="~/js/discovergroups.js" asp-append-version="true"></script>
+<script src="~/js/participants.js" asp-append-version="true"></script>
 
 
 

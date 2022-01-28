@@ -57,6 +57,7 @@ namespace Speet.Migrations
                     MeetupDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MaxParticipants = table.Column<int>(type: "INTEGER", nullable: false),
                     MeetupRecurrence = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsPrivate = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedByGoogleId = table.Column<string>(type: "TEXT", nullable: false),
                     GenderRestrictionTagGenderRestriction = table.Column<string>(type: "TEXT", nullable: true)
                 },

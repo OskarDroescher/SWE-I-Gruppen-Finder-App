@@ -45,7 +45,9 @@ namespace Speet.Controllers
 
         private List<SportGroup> GetFilteredSportGroups(User user, FilterSettingsRequest filterSettings)
         {
-            var groupsToDisplayQuery = _db.SportGroup.Where(sg => !sg.Participants.Contains(user));
+            var groupsToDisplayQuery = _db.SportGroup.Where(sg => !sg.IsPrivate);
+
+            groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => !sg.Participants.Contains(user));
 
             if (filterSettings.ActivityCategories.Count > 0)
                 groupsToDisplayQuery = groupsToDisplayQuery.Where(sg => sg.ActivityTags.Any(at => filterSettings.ActivityCategories.Contains(at.ActivityCategory)));
@@ -90,6 +92,12 @@ namespace Speet.Controllers
             };
 
             return View(viewContainer);
+        }
+
+        public IActionResult Invite(long groupId)
+        {
+            TempData["JoinPopupGroupId"] = groupId.ToString();
+            return RedirectToAction("DiscoverGroups");
         }
 
         public IActionResult CreateGroup()
@@ -151,7 +159,8 @@ namespace Speet.Controllers
                 CreatedBy = groupCreator,
                 ActivityTags = _db.ActivityTag.Where(at => request.ActivityCategories.Contains(at.ActivityCategory)).ToHashSet(),
                 GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction),
-                MeetupRecurrence = request.MeetupRecurrence
+                MeetupRecurrence = request.MeetupRecurrence,
+                IsPrivate = request.IsPrivate
             };
             newGroup.Participants.Add(groupCreator);
 
@@ -191,6 +200,7 @@ namespace Speet.Controllers
             groupToUpdate.MaxParticipants = request.MaxParticipants;
             groupToUpdate.GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction);
             groupToUpdate.MeetupRecurrence = request.MeetupRecurrence;
+            groupToUpdate.IsPrivate = request.IsPrivate;
 
             //Warning: overwriting the groupToEdit.ActivityTags reference directly could throw an exception, thats why the list is just refilled
             groupToUpdate.ActivityTags.Clear();
@@ -275,7 +285,16 @@ namespace Speet.Controllers
             if (sportGroup == null)
                 return Json(new { success = false });
 
-            return PartialView("~/Views/Shared/_ParticipantsPartial.cshtml", sportGroup.Participants.ToList());
+            return PartialView("~/Views/Shared/_ParticipantsPartial.cshtml", sportGroup);
+        }
+
+        public ActionResult GetConfirmJoinPartial(long groupId)
+        {
+            SportGroup sportGroup = _db.SportGroup.Find(groupId);
+            if (sportGroup == null)
+                return Json(new { success = false });
+
+            return PartialView("~/Views/Shared/_ConfirmJoinPartial.cshtml", sportGroup);
         }
 
         private static readonly Random _rnd = new Random();

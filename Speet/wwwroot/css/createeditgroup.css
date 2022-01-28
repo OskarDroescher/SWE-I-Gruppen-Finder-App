@@ -58,7 +58,7 @@
 }
 
 .participantswrapper {
-    height: 350px;
+    height: 300px;
     border: solid 3px Black;
     border-radius: 10px;
     overflow-x: hidden;
@@ -88,4 +88,8 @@
     display: grid;
     grid-template-columns: 250px 238px;
     grid-column-gap: 10px;
+}
+
+.isprivateselector {
+    width: 250px;
 }

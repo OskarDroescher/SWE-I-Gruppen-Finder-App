@@ -12,6 +12,7 @@ namespace Speet.Models.HttpRequestModels
         public List<string> ParticipantsIds { get; set; }
         public DateTime? MeetupDate { get; set; }
         public MeetupRecurrenceType MeetupRecurrence { get; set; }
+        public bool IsPrivate { get; set; }
 
         public AddEditGroupRequest()
         {

@@ -106,6 +106,7 @@ function handleParticipantsButtonClick(button) {
         dataType: 'html',
         success: function (result) {
             popuplayer.innerHTML = result;
+            addParticipantsCopyToClipboardEventHandler();
             contentlayer.classList.add('blurred', 'ignoreclicks');
             popuplayer.classList.remove('hidden');
         }

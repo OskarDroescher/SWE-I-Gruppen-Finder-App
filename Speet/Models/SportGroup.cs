@@ -24,6 +24,9 @@ namespace Speet.Models
         [Required]
         public MeetupRecurrenceType MeetupRecurrence { get; set; }
 
+        [Required]
+        public bool IsPrivate { get; set; }
+
         public virtual User CreatedBy { get; set; }
 
         public virtual ICollection<User> Participants { get; set; }

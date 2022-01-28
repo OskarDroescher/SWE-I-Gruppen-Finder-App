@@ -1,11 +1,16 @@
-﻿@model List<User>
+﻿@model SportGroup
 
     <div class="absolutecenter participantswrapper">
         <h3 class="participantsheading">Teilnehmer</h3>
         <div id="participantslist">
-            @foreach (var user in Model)
+            @foreach (var user in Model.Participants)
             {
                 <p><img src="@user.PictureUrl" alt="Avatar von @user.Username" class="rounded-circle avatar" />@user.Username</p>
             }
+        </div>
+        <div class="invitewrapper">
+            <p class="inviteheading">Einladungslink:</p>
+            <input id="invitetextfield" type="text" class="textfield" value="https://localhost:44372/SportGroup/Invite/?groupId=@Model.Id" readonly/>
+            <button id="clipboardbutton" class="primarybutton"><img src="~/icons/copytoclipboard-icon.png"/></button>
         </div>
     </div>

@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="~/css/mygroups.css" />
 <link rel="stylesheet" href="~/css/participants.css" />
 
-
 @if (Model.UserToDisplay.CreatedGroups.Count > 0 || Model.UserToDisplay.JoinedGroups.Count > 0)
 {
     <div class="viewcontainer">
@@ -51,11 +50,11 @@
                         @{
                             foreach (var activityTag in sportGroup.ActivityTags)
                             {
-                                <img class="tagicon" src="@activityTag.IconUrl" title="@activityTag.ActivityCategory"/>
+                                <img class="tagicon" src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
                             }
                             if (sportGroup.GenderRestrictionTag != null)
                             {
-                                <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" title="@sportGroup.GenderRestrictionTag.GenderRestriction"/>
+                                <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" title="@sportGroup.GenderRestrictionTag.GenderRestriction" />
                             }
                         }
                     </td>
@@ -68,13 +67,13 @@
                         <div class="oneline">
                             @if (Model.UserToDisplay.GoogleId.Equals(sportGroup.CreatedBy.GoogleId))
                             {
-                                <input class="primarybutton center tablebutton" type="button" value="Bearbeiten" onclick="location.href='/SportGroup/EditGroup/?groupId=@(sportGroup.Id)'"/>
+                                <input class="primarybutton center tablebutton" type="button" value="Bearbeiten" onclick="location.href='/SportGroup/EditGroup/?groupId=@(sportGroup.Id)'" />
                                 <input class="dangerbutton center tablebutton" type="button" value="Löschen" /> // See mygroups.js for button logic
                             }
                             else
                             {
                                 @*<input class="primarybutton center tablebutton" type="button" value="Details" />*@ // Not implemented yet
-                                <input class="leavebutton primarybutton center tablebutton" type="button" value="Austreten"/> //See mygroups.js for button logic
+                                <input class="leavebutton primarybutton center tablebutton" type="button" value="Austreten" />//See mygroups.js for button logic
                             }
                         </div>
                     </td>
@@ -115,6 +114,7 @@ else
 }
 
 <script src="~/js/mygroups.js" asp-append-version="true"></script>
+<script src="~/js/participants.js" asp-append-version="true"></script>
 
 
 

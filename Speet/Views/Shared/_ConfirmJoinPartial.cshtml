@@ -1,0 +1,43 @@
+﻿@model SportGroup
+
+<div class="absolutecenter confirmjoinwrapper">
+    <h3 class="confirmjoinheading">Gruppe beitreten</h3>
+    <div class="confirmjoininfowrapper">
+        <div class="groupinfowrapper">
+            <div>
+                <h5>Gruppenname</h5>
+                <span>@Model.GroupName</span>
+            </div>
+            <div>
+                <h5>Tags</h5> @{
+                    foreach (var activityTag in Model.ActivityTags)
+                    {
+                    <img class="tagicon" src="@activityTag.IconUrl" title="@activityTag.ActivityCategory" />
+                    }
+                    if (Model.GenderRestrictionTag != null)
+                    {
+                    <img class="tagicon" src="@Model.GenderRestrictionTag.IconUrl" title="@Model.GenderRestrictionTag.GenderRestriction" />
+                    }
+                }
+            </div>
+            <div>
+                <h5>Datum</h5>
+                <span>@Model.MeetupDate.ToString("dd.MM.yyyy") / @Model.MeetupDate.ToString("H:mm") Uhr</span>
+            </div>
+        </div>
+        <div>
+            <h5 class="centerText">Teilnehmer</h5>
+            <div id="participantslist">
+                @foreach (var user in Model.Participants)
+                {
+                    <p><img src="@user.PictureUrl" alt="Avatar von @user.Username" class="rounded-circle avatar" />@user.Username</p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="buttonwrapper centerText">
+        <h5>Soll der Gruppe beigetreten werden?</h5>
+        <input id="confirmjoinbutton" type="button" class="primarybutton center confirmjoinbutton" value="Ja"/>
+        <input id="canceljoinbutton" type="button" class="dangerbutton center confirmjoinbutton" value="Nein"/>
+    </div>
+</div>
