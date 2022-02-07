@@ -50,8 +50,7 @@ namespace Speet.Migrations
                 name: "SportGroup",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     GroupName = table.Column<string>(type: "TEXT", nullable: false),
                     Location = table.Column<string>(type: "TEXT", nullable: false),
                     MeetupDate = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -83,7 +82,7 @@ namespace Speet.Migrations
                 columns: table => new
                 {
                     ActivityTagsActivityCategory = table.Column<string>(type: "TEXT", nullable: false),
-                    AssignedGroupsId = table.Column<long>(type: "INTEGER", nullable: false)
+                    AssignedGroupsId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -106,7 +105,7 @@ namespace Speet.Migrations
                 name: "Joins",
                 columns: table => new
                 {
-                    JoinedGroupsId = table.Column<long>(type: "INTEGER", nullable: false),
+                    JoinedGroupsId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ParticipantsGoogleId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

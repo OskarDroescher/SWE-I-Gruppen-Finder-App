@@ -7,7 +7,7 @@ namespace Speet.Models
     public class SportGroup
     {
         [Key]
-        public long Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string GroupName { get; set; }

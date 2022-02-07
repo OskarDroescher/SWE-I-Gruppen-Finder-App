@@ -21,8 +21,8 @@ namespace Speet.Migrations
                     b.Property<string>("ActivityTagsActivityCategory")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("AssignedGroupsId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("AssignedGroupsId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ActivityTagsActivityCategory", "AssignedGroupsId");
 
@@ -61,9 +61,8 @@ namespace Speet.Migrations
 
             modelBuilder.Entity("Speet.Models.SportGroup", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedByGoogleId")
                         .IsRequired()
@@ -129,8 +128,8 @@ namespace Speet.Migrations
 
             modelBuilder.Entity("SportGroupUser", b =>
                 {
-                    b.Property<long>("JoinedGroupsId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("JoinedGroupsId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ParticipantsGoogleId")
                         .HasColumnType("TEXT");

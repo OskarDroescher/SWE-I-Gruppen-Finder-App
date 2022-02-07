@@ -94,7 +94,7 @@ namespace Speet.Controllers
             return View(viewContainer);
         }
 
-        public IActionResult Invite(long groupId)
+        public IActionResult Invite(Guid groupId)
         {
             TempData["JoinPopupGroupId"] = groupId.ToString();
             return RedirectToAction("DiscoverGroups");
@@ -117,7 +117,7 @@ namespace Speet.Controllers
             return View("CreateEditGroup", viewContainer);
         }
 
-        public IActionResult EditGroup(long groupId)
+        public IActionResult EditGroup(Guid groupId)
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
@@ -152,6 +152,7 @@ namespace Speet.Controllers
             User groupCreator = GetUserFromRequest();
             SportGroup newGroup = new SportGroup()
             {
+                Id = _db.GetUniqueSportGroupId(),
                 GroupName = request.GroupName,
                 Location = "Not implemented yet",
                 MeetupDate = request.MeetupDate.Value,
@@ -178,7 +179,7 @@ namespace Speet.Controllers
                 request.MeetupDate.HasValue);
         }
 
-        public IActionResult UpdateGroup(AddEditGroupRequest request, long groupId)
+        public IActionResult UpdateGroup(AddEditGroupRequest request, Guid groupId)
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
@@ -228,7 +229,7 @@ namespace Speet.Controllers
             }
         }
 
-        public IActionResult JoinGroup(long groupId)
+        public IActionResult JoinGroup(Guid groupId)
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
@@ -244,7 +245,7 @@ namespace Speet.Controllers
             return Json(new { success = true });
         }
 
-        public IActionResult LeaveGroup(long groupId)
+        public IActionResult LeaveGroup(Guid groupId)
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
@@ -260,7 +261,7 @@ namespace Speet.Controllers
             return Json(new { success = true });
         }
 
-        public IActionResult DeleteGroup(long groupId)
+        public IActionResult DeleteGroup(Guid groupId)
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Start", "Site");
@@ -279,7 +280,7 @@ namespace Speet.Controllers
             return Json(new { success = true });
         }
 
-        public ActionResult GetParticipantsPartial(long groupId)
+        public ActionResult GetParticipantsPartial(Guid groupId)
         {
             SportGroup sportGroup = _db.SportGroup.Find(groupId);
             if (sportGroup == null)
@@ -288,7 +289,7 @@ namespace Speet.Controllers
             return PartialView("~/Views/Shared/_ParticipantsPartial.cshtml", sportGroup);
         }
 
-        public ActionResult GetConfirmJoinPartial(long groupId)
+        public ActionResult GetConfirmJoinPartial(Guid groupId)
         {
             SportGroup sportGroup = _db.SportGroup.Find(groupId);
             if (sportGroup == null)
@@ -327,6 +328,7 @@ namespace Speet.Controllers
 
                 SportGroup testGroup = new SportGroup()
                 {
+                    Id = _db.GetUniqueSportGroupId(),
                     GroupName = $"Test Gruppe {i}",
                     CreatedBy = testUser,
                     Location = "Not implemented",

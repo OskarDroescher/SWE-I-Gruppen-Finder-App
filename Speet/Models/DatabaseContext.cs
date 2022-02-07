@@ -145,6 +145,23 @@ namespace Speet.Models
                         .HasOne<User>(sg => sg.CreatedBy)
                         .WithMany(u => u.CreatedGroups)
                         .IsRequired();
+
+            //Disable SportGroup automatic key generation
+            modelBuilder.Entity<SportGroup>()
+                .Property(sg => sg.Id)
+                .ValueGeneratedNever();
+        }
+
+        public Guid GetUniqueSportGroupId()
+        {
+            Guid id;
+
+            do
+            {
+                id = Guid.NewGuid();
+            } while (SportGroup.Find(id) != null);
+
+            return id;
         }
 
         public DbSet<SportGroup> SportGroup { get; set; }
