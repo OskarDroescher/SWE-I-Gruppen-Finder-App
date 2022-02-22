@@ -42,10 +42,10 @@ namespace Speet
             })
             .AddGoogle(options =>
             {
-                IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
+                //IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
 
-                options.ClientId = googleAuthNSection["ClientId"];
-                options.ClientSecret = googleAuthNSection["ClientSecret"];
+                options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
 
                 options.Scope.Add("https://www.googleapis.com/auth/user.gender.read");
                 options.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");

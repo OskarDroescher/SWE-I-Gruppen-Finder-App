@@ -42,7 +42,7 @@ namespace Speet.Controllers
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
 
-        [Route("Index")]
+        //[Route("google-response")]
         public IActionResult GoogleResponse()
         {
             string googleId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
