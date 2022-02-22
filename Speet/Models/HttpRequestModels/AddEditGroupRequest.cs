@@ -13,6 +13,8 @@ namespace Speet.Models.HttpRequestModels
         public DateTime? MeetupDate { get; set; }
         public MeetupRecurrenceType MeetupRecurrence { get; set; }
         public bool IsPrivate { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
 
         public AddEditGroupRequest()
         {

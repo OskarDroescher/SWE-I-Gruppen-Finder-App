@@ -46,6 +46,7 @@ var activityheading = document.getElementById('activityheading');
 var meetuptimeheading = document.getElementById('meetuptimeheading');
 var maxparticipantsheading = document.getElementById('maxparticipantsheading');
 var participantsheading = document.getElementById('participantsheading');
+var mapborder = document.getElementById('mapborder');
 var submitbutton = document.getElementById('submitbutton');
 function validateForm() {
     var forminvalid = false;
@@ -69,6 +70,13 @@ function validateForm() {
     } else {
         forminvalid = true;
         meetuptimeheading.classList.add('invalidtextcolor');
+    }
+
+    if (latitudeinput.value != '' && longitudeinput.value != '') {
+        mapborder.classList.remove('invalidborder');
+    } else {
+        forminvalid = true;
+        mapborder.classList.add('invalidborder');
     }
 
     var participantentries = document.getElementsByClassName('participantentry');
@@ -102,5 +110,56 @@ for (const button of removeparticipantbuttons) {
 function handleRemoveParticipantButtonClick(button) {
     var participantEntry = button.closest(".participantentry");
     participantEntry.remove();
+    validateForm();
+}
+
+//Set up map
+var map;
+var marker;
+
+var latitudeinput = document.getElementById('latitude');
+var longitudeinput = document.getElementById('longitude');
+
+if (latitudeinput.value && longitudeinput.value) {
+    setUpMap(latitudeinput.value, longitudeinput.value, 12);
+    setNewMarker(latitudeinput.value, longitudeinput.value);
+} else {
+    navigator.geolocation.getCurrentPosition(success, error, options);
+}
+
+var options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+};
+
+function success(pos) {
+    var crd = pos.coords;
+    setUpMap(crd.latitude, crd.longitude, 12);
+}
+
+function error(err) {
+    setUpMap(0, 0, 1);
+}
+
+function setUpMap(latitude, longitude, zoom) {
+    map = L.map('map').setView([latitude, longitude], zoom);
+    L.tileLayer('https://api.maptiler.com/maps/openstreetmap/{z}/{x}/{y}.jpg?key=qj5J53o4WLphIOc6xElB', {
+        attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+    }).addTo(map);
+    map.on('click', function (e) { setNewMarker(e.latlng.lat, e.latlng.lng) });
+}
+
+function setNewMarker(latitude, longitude) {
+    if (marker) {
+        map.removeLayer(marker);
+    }
+
+    marker = L.marker([latitude, longitude]);
+    map.addLayer(marker);
+
+    latitudeinput.value = latitude;
+    longitudeinput.value = longitude;
+
     validateForm();
 }

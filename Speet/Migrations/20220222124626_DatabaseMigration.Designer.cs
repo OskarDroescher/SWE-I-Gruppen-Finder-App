@@ -9,7 +9,7 @@ using Speet.Models;
 namespace Speet.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220207122709_DatabaseMigration")]
+    [Migration("20220222124626_DatabaseMigration")]
     partial class DatabaseMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,9 +80,11 @@ namespace Speet.Migrations
                     b.Property<bool>("IsPrivate")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Latitude")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("REAL");
 
                     b.Property<int>("MaxParticipants")
                         .HasColumnType("INTEGER");

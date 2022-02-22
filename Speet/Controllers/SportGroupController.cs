@@ -5,6 +5,7 @@ using Speet.Models.ContainerModels;
 using Speet.Models.HttpRequestModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 
@@ -154,14 +155,15 @@ namespace Speet.Controllers
             {
                 Id = _db.GetUniqueSportGroupId(),
                 GroupName = request.GroupName,
-                Location = "Not implemented yet",
                 MeetupDate = request.MeetupDate.Value,
                 MaxParticipants = request.MaxParticipants,
                 CreatedBy = groupCreator,
                 ActivityTags = _db.ActivityTag.Where(at => request.ActivityCategories.Contains(at.ActivityCategory)).ToHashSet(),
                 GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction),
                 MeetupRecurrence = request.MeetupRecurrence,
-                IsPrivate = request.IsPrivate
+                IsPrivate = request.IsPrivate,
+                Latitude = Convert.ToDouble(request.Latitude, CultureInfo.InvariantCulture),
+                Longitude = Convert.ToDouble(request.Longitude, CultureInfo.InvariantCulture)
             };
             newGroup.Participants.Add(groupCreator);
 
@@ -176,7 +178,9 @@ namespace Speet.Controllers
             return (request.GroupName.Length > 0 &&
                 request.GroupName.Length <= ApplicationConstants.MaxGroupNameLength &&
                 request.ActivityCategories.Count > 0 &&
-                request.MeetupDate.HasValue);
+                request.MeetupDate.HasValue &&
+                !string.IsNullOrEmpty(request.Latitude) &&
+                !string.IsNullOrEmpty(request.Longitude));
         }
 
         public IActionResult UpdateGroup(AddEditGroupRequest request, Guid groupId)
@@ -196,12 +200,13 @@ namespace Speet.Controllers
                 return new EmptyResult();
 
             groupToUpdate.GroupName = request.GroupName;
-            groupToUpdate.Location = "Not implemented yet";
             groupToUpdate.MeetupDate = request.MeetupDate.Value;
             groupToUpdate.MaxParticipants = request.MaxParticipants;
             groupToUpdate.GenderRestrictionTag = _db.GenderRestrictionTag.Find(request.GenderRestriction);
             groupToUpdate.MeetupRecurrence = request.MeetupRecurrence;
             groupToUpdate.IsPrivate = request.IsPrivate;
+            groupToUpdate.Latitude = Convert.ToDouble(request.Latitude, CultureInfo.InvariantCulture);
+            groupToUpdate.Longitude = Convert.ToDouble(request.Longitude, CultureInfo.InvariantCulture);
 
             //Warning: overwriting the groupToEdit.ActivityTags reference directly could throw an exception, thats why the list is just refilled
             groupToUpdate.ActivityTags.Clear();
@@ -331,7 +336,6 @@ namespace Speet.Controllers
                     Id = _db.GetUniqueSportGroupId(),
                     GroupName = $"Test Gruppe {i}",
                     CreatedBy = testUser,
-                    Location = "Not implemented",
                     MeetupDate = DateTime.Now.AddDays(_rnd.Next(1, 30)),
                     MaxParticipants = _rnd.Next(2, 20),
                     ActivityTags = testActivityTags,

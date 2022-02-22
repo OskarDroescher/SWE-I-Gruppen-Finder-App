@@ -11,6 +11,8 @@
     MeetupRecurrenceType meetupRecurrrence;
     string submitButtonText;
     bool isPrivate;
+    string latitude;
+    string longitude;
 
     bool editMode = Model.SportGroupToEdit != null;
     if (editMode)
@@ -28,6 +30,8 @@
         meetupDateTime = Model.SportGroupToEdit.MeetupDate.ToString("yyyy-MM-ddTHH:mm");
         meetupRecurrrence = Model.SportGroupToEdit.MeetupRecurrence;
         isPrivate = Model.SportGroupToEdit.IsPrivate;
+        latitude = Model.SportGroupToEdit.Latitude.ToString(CultureInfo.InvariantCulture);
+        longitude = Model.SportGroupToEdit.Longitude.ToString(CultureInfo.InvariantCulture);
         submitButtonText = "Gruppe bearbeiten";
     }
     else
@@ -42,11 +46,16 @@
         meetupDateTime = DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm");
         meetupRecurrrence = MeetupRecurrenceType.OneTime;
         isPrivate = false;
+        latitude = string.Empty;
+        longitude = string.Empty;
         submitButtonText = "Gruppe erstellen";
     }
 }
 
 <link rel="stylesheet" href="~/css/createeditgroup.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin="" />
 
 <div class="viewcontainer">
     <div class="inline-block">
@@ -139,25 +148,20 @@
                 }
             </div>
 
+            <input id="latitude" type="hidden" name="Latitude" value="@latitude" />
+            <input id="longitude" type="hidden" name="Longitude" value="@longitude" />
             <input id="submitbutton" type="submit" class="primarybutton hcenter" value="@submitButtonText" />
         </form>
     </div>
-   
-    <div class="mapcontainer" id="map">
-        <script>
-            function initMap() {
-                const myLatLng = { lat: -25.363, lng: 131.044 };
-                const map = new google.maps.Map(document.getElementById("map"), {
-                    zoom: 4,
-                    center: myLatLng,
-                });
-            }
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyFncc8DAmnkXS1XPR9IIDcvB7DeCQ84c&callback=initMap&v=weekly"
-                async defer></script>
+
+    <div id="mapborder">
+        <div class="use-all-space" id="map"></div>
     </div>
 
 </div>
 
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
 <script src="~/js/createeditgroup.js" asp-append-version="true"></script>
 

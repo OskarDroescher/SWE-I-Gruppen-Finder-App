@@ -93,3 +93,7 @@
 .isprivateselector {
     width: 250px;
 }
+
+.invalidborder {
+    border: solid 3px #ff4040;
+}

@@ -52,9 +52,10 @@ namespace Speet.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     GroupName = table.Column<string>(type: "TEXT", nullable: false),
-                    Location = table.Column<string>(type: "TEXT", nullable: false),
                     MeetupDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MaxParticipants = table.Column<int>(type: "INTEGER", nullable: false),
+                    Latitude = table.Column<double>(type: "REAL", nullable: false),
+                    Longitude = table.Column<double>(type: "REAL", nullable: false),
                     MeetupRecurrence = table.Column<int>(type: "INTEGER", nullable: false),
                     IsPrivate = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedByGoogleId = table.Column<string>(type: "TEXT", nullable: false),

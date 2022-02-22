@@ -13,13 +13,16 @@ namespace Speet.Models
         public string GroupName { get; set; }
 
         [Required]
-        public string Location { get; set; }
-
-        [Required]
         public DateTime MeetupDate { get; set; }
 
         [Required]
         public int MaxParticipants { get; set; }
+
+        [Required]
+        public double Latitude { get; set; }
+
+        [Required]
+        public double Longitude { get; set; }
 
         [Required]
         public MeetupRecurrenceType MeetupRecurrence { get; set; }
