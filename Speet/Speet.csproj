@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Apis" Version="1.55.0" />
+    <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.55.0" />
     <PackageReference Include="Google.Apis.PeopleService.v1" Version="1.55.0.2437" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.19" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.4" />

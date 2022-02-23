@@ -1,11 +1,10 @@
-﻿
-<ul class="topnavbaritem-right navbar-nav flex-sm-row-reverse d-sm-inline-flex">
+﻿<ul class="topnavbaritem-right navbar-nav flex-sm-row-reverse d-sm-inline-flex">
     @if (User.Identity.IsAuthenticated)
     {
     <li class="form-inline">
-        <img src="@User.FindFirst("urn:google:picture")?.Value" alt="avatar" class="rounded-circle avatar" />
+        <img src="@User.Claims.ToList()[4].Value" alt="avatar" class="rounded-circle avatar" />
         <p>@User.FindFirst("Gender")?.Value</p>
-        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
+        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Claims.ToList()[3].Value!</a>
     </li>
         <li class="form-inline">
                 <a asp-controller="Account" asp-action="Logout">Logout</a>

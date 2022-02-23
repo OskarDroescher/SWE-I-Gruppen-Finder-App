@@ -17,6 +17,7 @@ using Google.Apis.Auth.OAuth2;
 using System.IO;
 using System.Threading;
 using Google.Apis.Util.Store;
+using Google.Apis.Auth.AspNetCore3;
 
 namespace Speet
 {
@@ -32,14 +33,43 @@ namespace Speet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(options =>
+            services.AddAuthentication(o =>
             {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                // This forces challenge results to be handled by Google OpenID Handler, so there's no
+                // need to add an AccountController that emits challenges for Login.
+                o.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+                // This forces forbid results to be handled by Google OpenID Handler, which checks if
+                // extra scopes are required and does automatic incremental auth.
+                o.DefaultForbidScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+                // Default scheme that will handle everything else.
+                // Once a user is authenticated, the OAuth2 token info is stored in cookies.
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+
             })
             .AddCookie(options =>
             {
                 options.LoginPath = "/account/google-login"; // Must be lowercase              
             })
+            .AddGoogleOpenIdConnect(options =>
+            {
+                options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+
+                options.Scope.Add("https://www.googleapis.com/auth/user.gender.read");
+                options.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
+                options.Scope.Add("profile");
+
+                options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "UserId");
+                options.ClaimActions.MapJsonKey(ClaimTypes.Email, "EmailAddress", ClaimValueTypes.Email);
+                options.ClaimActions.MapJsonKey(ClaimTypes.Name, "Name");
+                options.ClaimActions.MapJsonKey(ClaimTypes.Gender, "Gender");
+                options.ClaimActions.MapJsonKey(ClaimTypes.DateOfBirth, "Birthday");
+                options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+
+                options.SaveTokens = true;
+            });
+            /*
             .AddGoogle(options =>
             {
                 //IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
@@ -61,7 +91,7 @@ namespace Speet
                 options.SaveTokens = true;
 
             });
-
+            */
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddDbContext<DatabaseContext>();
         }
