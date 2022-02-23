@@ -42,7 +42,8 @@ namespace Speet.Controllers
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
 
-        //[Route("google-response")]
+        [Route("google-response")]
+        [Route("index")]
         public IActionResult GoogleResponse()
         {
             string googleId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -83,7 +84,7 @@ namespace Speet.Controllers
                 ClientSecret = Configuration["Authentication:Google:ClientSecret"]
             };
 
-            UserCredential credential = GoogleWebAuthorizationBroker.AuthorizeAsync(secrets, Scopes, "me", CancellationToken.None).Result;
+            UserCredential credential = GoogleWebAuthorizationBroker.AuthorizeAsync(secrets, Scopes, "user", CancellationToken.None).Result;
 
             var peopleService = new PeopleServiceService(new BaseClientService.Initializer()
             {
