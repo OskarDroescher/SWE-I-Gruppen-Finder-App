@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Speet.Controllers
 {
-    [AllowAnonymous, Route("account")]
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly DatabaseContext _db;
