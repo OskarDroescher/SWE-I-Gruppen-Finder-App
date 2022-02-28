@@ -112,3 +112,43 @@ function handleParticipantsButtonClick(button) {
         }
     });
 }
+
+//Set up map
+var map = L.map('map');
+L.tileLayer('https://api.maptiler.com/maps/openstreetmap/{z}/{x}/{y}.jpg?key=qj5J53o4WLphIOc6xElB', {
+    attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+}).addTo(map);
+
+var markersMap = {}; //For using markers later
+var markersFeatureGroup = new L.featureGroup(); //For getting marker bounds at initialization
+var mapIconButtons = document.getElementsByClassName('mapicon');
+for (const mapIconButton of mapIconButtons) {
+    addMarker(mapIconButton);
+    mapIconButton.addEventListener('click', handleMapIconClick);
+}
+
+if (markersFeatureGroup.getLayers().length > 0) {
+    markersFeatureGroup.addTo(map);
+    map.fitBounds(markersFeatureGroup.getBounds());
+} else {
+    map.setView([0, 0], 1);
+}
+
+function addMarker(mapIconButton) {
+    var tableRow = mapIconButton.closest(".tablerow");
+    var groupName = tableRow.querySelector('#groupname').innerText;
+    var groupId = tableRow.querySelector('#groupid').innerText;
+    var latitude = tableRow.querySelector('#latitude').value;
+    var longitude = tableRow.querySelector('#longitude').value;
+
+    marker = L.marker([latitude, longitude]);
+    marker.bindPopup("<a href='#" + groupId + "'>" + groupName + "</a>");
+    markersFeatureGroup.addLayer(marker);
+    markersMap[groupId] = marker;
+}
+
+function handleMapIconClick(mapIconButton) {
+    var marker = markersMap[mapIconButton.currentTarget.id];
+    $(window).scrollTop(0);
+    marker.openPopup();
+}

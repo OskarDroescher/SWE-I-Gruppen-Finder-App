@@ -86,7 +86,7 @@
 }
 
 /*Map*/
-.mapcontainer {
+#map {
     background-color: #0E5090;
 }
 
@@ -119,9 +119,14 @@
 }
 
 .mapicon {
+    cursor: pointer;
     height: 50px;
     border-radius: 10px;
 }
+
+    .mapicon:hover {
+        outline: solid 3px Black;
+    }
 
 .tagicon {
     height: 40px;

@@ -20,6 +20,9 @@
 
 <link rel="stylesheet" href="~/css/discovergroups.css" />
 <link rel="stylesheet" href="~/css/participants.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin="" />
 
 <div class="viewcontainer">
     <div id="pageindex" class="hidden">@Model.PaginationInfo.CurrentPageIndex</div>
@@ -58,7 +61,7 @@
                 <input id="maxdistanceslider" class="slider" type="range" min="@ApplicationConstants.MinShownSportGroupDistance" max="@ApplicationConstants.MaxShownSportGroupDistance" name="MaxDistance" value="@maxDistance" />
                 <div class="right">
                     <input id="maxdistanceslidervalue" type="number" class="valuelabel" min="1" max="250" />
-                    <span>km</span>
+                    <span>km</span>latitude
                 </div>
             </div>
 
@@ -89,18 +92,7 @@
         </form>
     </div>
 
-    <div class="mapcontainer" id="map">
-        <script>
-            function initMap() {
-                const myLatLng = { lat: -25.363, lng: 131.044 };
-                const map = new google.maps.Map(document.getElementById("map"), {
-                    zoom: 4,
-                    center: myLatLng,
-                });
-            }
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyFncc8DAmnkXS1XPR9IIDcvB7DeCQ84c&callback=initMap&v=weekly"></script>
-    </div>
+    <div class="use-all-space" id="map"></div>
 
     @{
         if (Model.SportGroupsToDisplay.Count > 0)
@@ -159,7 +151,9 @@
                         </td>
 
                         <td class="centerText">
-                            <img class="mapicon" src="/icons/maps-icon.png" />
+                            <img id="@sportGroup.Id" class="mapicon" src="/icons/maps-icon.png" />
+                            <input id="latitude" type="hidden" value="@sportGroup.Latitude.ToString(CultureInfo.InvariantCulture)" />
+                            <input id="longitude" type="hidden" value="@sportGroup.Longitude.ToString(CultureInfo.InvariantCulture)" />
                         </td>
 
                         <td class="centerText">
@@ -214,6 +208,9 @@
     <script src="~/js/confirmjoin.js" asp-append-version="true"></script>
 }
 
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
 <script src="~/js/discovergroups.js" asp-append-version="true"></script>
 <script src="~/js/participants.js" asp-append-version="true"></script>
 
