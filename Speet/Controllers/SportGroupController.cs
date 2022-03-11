@@ -294,6 +294,15 @@ namespace Speet.Controllers
             return PartialView("~/Views/Shared/_ParticipantsPartial.cshtml", sportGroup);
         }
 
+        public ActionResult GetMapPopupPartial(Guid groupId)
+        {
+            SportGroup sportGroup = _db.SportGroup.Find(groupId);
+            if (sportGroup == null)
+                return Json(new { success = false });
+
+            return PartialView("~/Views/Shared/_MapPopupPartial.cshtml", sportGroup);
+        }
+
         public ActionResult GetConfirmJoinPartial(Guid groupId)
         {
             SportGroup sportGroup = _db.SportGroup.Find(groupId);

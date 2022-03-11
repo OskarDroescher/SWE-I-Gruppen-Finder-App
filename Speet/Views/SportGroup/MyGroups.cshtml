@@ -6,6 +6,10 @@
 
 <link rel="stylesheet" href="~/css/mygroups.css" />
 <link rel="stylesheet" href="~/css/participants.css" />
+<link rel="stylesheet" href="~/css/mappopup.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin="" />
 
 @if (Model.UserToDisplay.CreatedGroups.Count > 0 || Model.UserToDisplay.JoinedGroups.Count > 0)
 {
@@ -24,11 +28,15 @@
                     <h3 class="centerText">Tags</h3>
                 </th>
 
+                <th width="5%">
+                    <h3 class="centerText">Standort</h3>
+                </th>
+
                 <th width="10%">
                     <h3 class="centerText">Datum</h3>
                 </th>
 
-                <th width="25%"></th>
+                <th width="20%"></th>
             </tr>
 
             @foreach (var sportGroup in Model.GroupsToDisplay)
@@ -57,6 +65,10 @@
                                 <img class="tagicon" src="@sportGroup.GenderRestrictionTag.IconUrl" title="@sportGroup.GenderRestrictionTag.GenderRestriction" />
                             }
                         }
+                    </td>
+
+                    <td class="centerText">
+                        <img class="mapicon" src="/icons/maps-icon.png" />
                     </td>
 
                     <td class="centerText oneline">
@@ -115,6 +127,10 @@ else
 
 <script src="~/js/mygroups.js" asp-append-version="true"></script>
 <script src="~/js/participants.js" asp-append-version="true"></script>
+<script src="~/js/mappopup.js" asp-append-version="true"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
 
 
 

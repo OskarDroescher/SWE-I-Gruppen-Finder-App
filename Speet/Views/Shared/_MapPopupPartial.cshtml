@@ -1,0 +1,7 @@
+﻿@model SportGroup
+
+<div class="use-all-space absolutecenter" id="map"></div>
+<input id="latitude" type="hidden" value="@Model.Latitude.ToString(CultureInfo.InvariantCulture)" />
+<input id="longitude" type="hidden" value="@Model.Longitude.ToString(CultureInfo.InvariantCulture)" />
+<input id="meetupdate" type="hidden" value="@Model.MeetupDate.ToString("dd.MM.yyyy") / @Model.MeetupDate.ToString("H:mm") Uhr" />
+<input id="groupname" type="hidden" value="@Model.GroupName" />

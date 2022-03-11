@@ -63,3 +63,29 @@ function handleParticipantsButtonClick(button) {
     });
 }
 
+//Show map popup
+var mapIconButtons = document.getElementsByClassName('mapicon');
+for (const button of mapIconButtons) {
+    button.addEventListener('click', function () { handleMapIconButtonClick(button) })
+}
+
+function handleMapIconButtonClick(button) {
+    var contentlayer = document.getElementById('contentlayer');
+    var popuplayer = document.getElementById('popuplayer');
+    var tableRow = button.closest(".tablerow");
+    var groupId = tableRow.querySelector('#groupid').innerText;
+
+    $.ajax({
+        url: '/SportGroup/GetMapPopupPartial',
+        data: { groupId: groupId },
+        async: false,
+        dataType: 'html',
+        success: function (result) {
+            popuplayer.innerHTML = result;
+            contentlayer.classList.add('blurred', 'ignoreclicks');
+            popuplayer.classList.remove('hidden');
+            initiateMap();
+        }
+    });
+}
+
