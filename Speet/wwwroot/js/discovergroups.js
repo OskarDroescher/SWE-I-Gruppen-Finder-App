@@ -136,13 +136,15 @@ if (markersFeatureGroup.getLayers().length > 0) {
 
 function addMarker(mapIconButton) {
     var tableRow = mapIconButton.closest(".tablerow");
-    var groupName = tableRow.querySelector('#groupname').innerText;
+
     var groupId = tableRow.querySelector('#groupid').innerText;
+    var groupName = tableRow.querySelector('#groupname').innerText;
+    var meetupDate = tableRow.querySelector('#meetupdate').innerText;
     var latitude = tableRow.querySelector('#latitude').value;
     var longitude = tableRow.querySelector('#longitude').value;
 
     marker = L.marker([latitude, longitude]);
-    marker.bindPopup("<a href='#" + groupId + "'>" + groupName + "</a>");
+    marker.bindPopup(`<center><b>${groupName}</b><br>${meetupDate}<br><input class="primarybutton" type="button" onclick="document.getElementById('${groupId}').scrollIntoView({behavior: 'auto', block: 'center', inline: 'center'});" value="Zu Eintrag scrollen" />`);
     markersFeatureGroup.addLayer(marker);
     markersMap[groupId] = marker;
 }

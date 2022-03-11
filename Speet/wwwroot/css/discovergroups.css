@@ -184,3 +184,8 @@
     display: grid;
     grid-template-columns: auto 100px;
 }
+
+.popuplink {
+    color: black;
+    text-decoration: none;
+}

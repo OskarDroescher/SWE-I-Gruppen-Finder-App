@@ -7,7 +7,7 @@
         public const int SportGroupsExpirationDays = 90;
 
         //Pagination
-        public const int SportGroupsPerPage = 5;
+        public const int SportGroupsPerPage = 10;
         public const int MaxShownPreviousPages = 2;
         public const int MaxShownNextPages = 2;
 
