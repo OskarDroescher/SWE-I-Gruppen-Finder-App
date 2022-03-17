@@ -144,9 +144,24 @@ function addMarker(mapIconButton) {
     var longitude = tableRow.querySelector('#longitude').value;
 
     marker = L.marker([latitude, longitude]);
-    marker.bindPopup(`<center><b>${groupName}</b><br>${meetupDate}<br><input class="primarybutton" type="button" onclick="document.getElementById('${groupId}').scrollIntoView({behavior: 'auto', block: 'center', inline: 'center'});" value="Zu Eintrag scrollen" />`);
+    marker.bindPopup(`<center><b>${groupName}</b><br>${meetupDate}<br><input class="primarybutton" type="button" onclick="handleScrollToEntry('${groupId}');" value="Zu Eintrag scrollen" />`);
     markersFeatureGroup.addLayer(marker);
     markersMap[groupId] = marker;
+}
+
+function handleScrollToEntry(groupId) {
+    var tableRow = document.getElementById(groupId).closest(".tablerow");
+    if (!tableRow.classList.contains('highlightentry')) {
+        highlightEntry(tableRow);
+    }
+    tableRow.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+}
+
+function highlightEntry(tableRow) {
+    tableRow.classList.add('highlightentry');
+    setTimeout(function () {
+        tableRow.classList.remove('highlightentry');
+    }, 2000);
 }
 
 function handleMapIconClick(mapIconButton) {

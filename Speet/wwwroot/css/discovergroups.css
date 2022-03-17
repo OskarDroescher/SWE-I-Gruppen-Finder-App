@@ -189,3 +189,7 @@
     color: black;
     text-decoration: none;
 }
+
+.highlightentry {
+    background-color: #0E5090;
+}
