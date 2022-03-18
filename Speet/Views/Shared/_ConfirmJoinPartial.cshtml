@@ -27,7 +27,7 @@
         </div>
         <div>
             <h5 class="centerText">Teilnehmer</h5>
-            <div id="participantslist">
+            <div id="cjparticipantslist">
                 @foreach (var user in Model.Participants)
                 {
                     <p><img src="@user.PictureUrl" alt="Avatar von @user.Username" class="rounded-circle avatar" />@user.Username</p>
