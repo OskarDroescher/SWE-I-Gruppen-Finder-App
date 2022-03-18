@@ -291,7 +291,13 @@ namespace Speet.Controllers
             if (sportGroup == null)
                 return Json(new { success = false });
 
-            return PartialView("~/Views/Shared/_ParticipantsPartial.cshtml", sportGroup);
+            ParticipantsPartialContainer container = new ParticipantsPartialContainer()
+            {
+                SportGroup = sportGroup,
+                HttpContext = HttpContext
+            };
+
+            return PartialView("~/Views/Shared/_ParticipantsPartial.cshtml", container);
         }
 
         public ActionResult GetMapPopupPartial(Guid groupId)

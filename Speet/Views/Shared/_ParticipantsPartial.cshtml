@@ -1,16 +1,16 @@
-﻿@model SportGroup
+﻿@model ParticipantsPartialContainer
 
     <div class="absolutecenter participantswrapper">
         <h3 class="participantsheading">Teilnehmer</h3>
         <div id="participantslist">
-            @foreach (var user in Model.Participants)
+            @foreach (var user in Model.SportGroup.Participants)
             {
                 <p><img src="@user.PictureUrl" alt="Avatar von @user.Username" class="rounded-circle avatar" />@user.Username</p>
             }
         </div>
         <div class="invitewrapper">
             <p class="inviteheading">Einladungslink:</p>
-            <input id="invitetextfield" type="text" class="textfield" value="https://localhost:44372/SportGroup/Invite/?groupId=@Model.Id" readonly/>
+            <input id="invitetextfield" type="text" class="textfield" value="https://@(Model.HttpContext.Request.Host.ToString())/SportGroup/Invite/?groupId=@Model.SportGroup.Id" readonly/>
             <button id="clipboardbutton" class="primarybutton"><img src="~/icons/copytoclipboard-icon.png"/></button>
         </div>
     </div>
