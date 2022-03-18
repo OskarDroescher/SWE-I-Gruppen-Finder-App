@@ -193,3 +193,7 @@
 .highlightentry {
     background-color: #0E5090;
 }
+
+#map {
+    z-index: 0;
+}
